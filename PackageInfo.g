@@ -62,8 +62,9 @@ PackageDoc := rec(
 
 Dependencies := rec(
   GAP := ">= 4.11",
-  NeededOtherPackages := [ ],
-  SuggestedOtherPackages := [ ],
+  NeededOtherPackages := [ [ "GAPDoc", ">= 1.6.1" ],
+                           [ "RepnDecomp", ">= 1.3.0" ] ],
+  SuggestedOtherPackages := [ [ "Repsn", ">= 3.1.2" ] ],
   ExternalConditions := [ ],
 ),
 

@@ -8,3 +8,6 @@ ReadPackage( "QGNAG", "gap/semidirectproduct.gi");
 ReadPackage( "QGNAG", "gap/F4element.gi");
 ReadPackage( "QGNAG", "gap/transporter.gi");
 ReadPackage( "QGNAG", "gap/conmutationsrulesxy.gi");
+ReadPackage( "QGNAG", "gap/tensorelement.gi");
+ReadPackage( "QGNAG", "gap/deltafunctionforsemidirectproduct.gi");
+ReadPackage( "QGNAG", "gap/basisforYDmodule.gi");

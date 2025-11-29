@@ -1,13 +1,3 @@
-#############################################################################
-# Constructor
-#############################################################################
-
-
-# ---------------------------------------------------------------------- #
-# ----------        3. Element Of Semidirect Product        ------------ #
-# ---------------------------------------------------------------------- #
-
-# Constructor de un objeto ElementF4
 ElementF4 := function( f)
     local obj, a, alias;
     # Comprobamos que los argumentos son de tipo correcto
@@ -20,12 +10,6 @@ ElementF4 := function( f)
     SetAlias( obj, alias );
     return obj;
 end;
-
-
-#############################################################################
-# 4. Operation On  Semidirect Product ( MultiplicativeElement )                                      #
-#############################################################################
-
 
 InstallMethod(OneOp,
     "identity element of SDP",
