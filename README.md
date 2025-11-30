@@ -1,8 +1,8 @@
 [![codecov](https://codecov.io/gh/juniors90/QGNAG/graph/badge.svg?token=FWGGKQ46IC)](https://codecov.io/gh/juniors90/QGNAG)
-[![Forks](https://img.shields.io/github/forks/juniors90/QGNAG)](https://github.com/juniors90/QGNAG/stargazers)
-[![star](https://img.shields.io/github/stars/juniors90/QGNAG?color=yellow)](https://github.com/juniors90/QGNAG/network/members)
 [![issues](https://img.shields.io/github/issues/juniors90/QGNAG?color=teal)](https://github.com/juniors90/QGNAG/issues)
 [![GitHub contributors](https://img.shields.io/github/contributors/juniors90/QGNAG?color=green)](https://github.com/juniors90/QGNAG/graphs/contributors)
+[![Forks](https://img.shields.io/github/forks/juniors90/QGNAG)](https://github.com/juniors90/QGNAG/stargazers)
+[![star](https://img.shields.io/github/stars/juniors90/QGNAG?color=yellow)](https://github.com/juniors90/QGNAG/network/members)
 
 # The GAP package QGNAG
 
