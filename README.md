@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/juniors90/QGNAG/graph/badge.svg?token=16t0Y6UH8f)](https://codecov.io/gh/juniors90/QGNAG)
+
 # The GAP package QGNAG
 
 TODO: add a description of your package; perhaps also instructions how how to

@@ -2,7 +2,7 @@
 # Constructor
 #############################################################################
 
-BindGlobal( "ConfigSDP", rec( p := 4, m := 6 ) );
+
 
 BindGlobal("fam", ElementsFamily( FamilyObj( ZmodnZ( ConfigSDP.m ) ) ) );
 

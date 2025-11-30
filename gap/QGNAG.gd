@@ -1,1 +1,1 @@
-DeclareGlobalFunction( "QGNAG_Example" );
+

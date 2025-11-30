@@ -1,6 +1,6 @@
 
-InstallGlobalFunction( TensorBasisForSimples, function(G, Gamma_g, rho, allPairsInG, allElementSDP )
-    local rec_rho, Vbase, cosets, Gbase, SDPBase, TensorBase, idxs;
+InstallGlobalFunction( TensorBasisForSimples, function(G, g, rho, allPairsInG, allElementSDP )
+    local rec_rho, Vbase, cosets, Gbase, SDPBase, TensorBase, idxs, Gamma_g;
 
     # Computamos la representación usando Serre
     rec_rho := REPN_ComputeUsingSerre(rho);
@@ -9,6 +9,7 @@ InstallGlobalFunction( TensorBasisForSimples, function(G, Gamma_g, rho, allPairs
     Vbase := rec_rho.basis;
 
     # Lista de cosets derechos de Gamma_g en G
+    Gamma_g := Centralizer(G, g);
     cosets := RightCosets(G, Gamma_g);
 
     # Tomamos un representante de cada coset
@@ -23,7 +24,7 @@ InstallGlobalFunction( TensorBasisForSimples, function(G, Gamma_g, rho, allPairs
 end);
 
 
-InstallGlobalFunction( GetCentralizer, function( G )
+InstallGlobalFunction( GetCentralizers, function( G )
     local c, conjClasses, rep, size, ratio, centralizer, centralizers;
     
     centralizers := [];
@@ -46,8 +47,12 @@ InstallGlobalFunction( GetCentralizer, function( G )
 end);
 
 
-InstallGlobalFunction( GetCentralizerOfElement, function(G, g, ccreps, ccrepsElementSDP)
+InstallGlobalFunction( GetCentralizerOfElement, function(G, g, allPairsInG, allElementsSDP )
     local centralizer, sizeG, sizeC, classSize, check, idx, repElementSDP;
+
+    if not (g in List(ConjugacyClasses(G), Representative)) then
+        Error("⚠️ The element g is not a representative of the conjugation class of G.\n");
+    fi;
     
     # Calcula el centralizador de g en G
     centralizer := Centralizer(G, g);
@@ -56,13 +61,15 @@ InstallGlobalFunction( GetCentralizerOfElement, function(G, g, ccreps, ccrepsEle
     sizeG := Size(G);
     sizeC := Size(centralizer);
     classSize := sizeG / sizeC;
-    idx:=Position(ccreps, g);
-    repElementSDP:=ccrepsElementSDP[idx];
+    
+    idx := Position(allPairsInG, g);
+    Print("\n idx:  ", idx);
+    repElementSDP := allElementsSDP[idx];
     
     # (opcional) chequeo de consistencia con la clase de conjugación real
     check := Size(ConjugacyClass(G, g));
     if check <> classSize then
-        Print("⚠️ Error: la verificación no coincide.\n");
+        Error("⚠️ Error: la verificación no coincide.\n");
     fi;
     
     # Devolvemos un registro con la info
@@ -71,17 +78,18 @@ InstallGlobalFunction( GetCentralizerOfElement, function(G, g, ccreps, ccrepsEle
         centralizer := centralizer,
         classSize := classSize,
         centralizerSize := sizeC,
-        structure:=StructureDescription(centralizer),
-        repElementSDP:=repElementSDP
+        structure := StructureDescription( centralizer ),
+        repElementSDP := repElementSDP
     );
+    return 0;
 end);
 
 
-InstallGlobalFunction( GetSimplesMod, function( G )
+InstallGlobalFunction( GetSimplesMod, function( G, allElementSDP)
     local base, c, i, irrepsGamma_g, simples, rho, chi, M_g_rho, centralizers;
 
     simples:= [];;
-    centralizers := GetCentralizer( G );
+    centralizers := GetCentralizers( G );
 
     for c in centralizers do
         irrepsGamma_g := Irr( c.centralizer );
@@ -89,7 +97,7 @@ InstallGlobalFunction( GetSimplesMod, function( G )
             chi := irrepsGamma_g[ i ];;
             rho := IrreducibleAffordingRepresentation( chi );;
             M_g_rho := InducedSubgroupRepresentation( G, rho );;
-            base := TensorBasisForSimples( G, c.centralizer, rho );;
+            base := TensorBasisForSimples( G, c.rep, rho, allElementSDP );;
             Add( simples, rec( simple := M_g_rho, weight := rec( g := c.rep, rho := rho ), base := base ) );
         od;
     od;
@@ -97,21 +105,21 @@ InstallGlobalFunction( GetSimplesMod, function( G )
 end);
 
 
-InstallGlobalFunction( GetSimplesModAttachedToElement, function(G, centralizer, allPairsInG, allElementSDP )
+InstallGlobalFunction( GetSimplesModAttachedToElement, function(G, g, allPairsInG, allElementSDP )
     local base, c, i, irrepsGamma_g, simples, rho, chi, M_g_rho;
 
     simples:= [];;
 
-    irrepsGamma_g := Irr( centralizer.centralizer );
+    irrepsGamma_g := Irr(  Centralizer(G, g) );
     for i in [ 1 .. Length( irrepsGamma_g ) ] do
         chi := irrepsGamma_g[ i ];;
         rho := IrreducibleAffordingRepresentation( chi );;
         M_g_rho := InducedSubgroupRepresentation( G, rho );;
-        base := TensorBasisForSimples( G, centralizer.centralizer, rho, allPairsInG, allElementSDP );;
+        base := TensorBasisForSimples( G, g, rho, allElementSDP );;
         Add( simples, rec(
             simple := M_g_rho,
-            weight := rec( g := centralizer.rep, rho := rho ),
-            weightSDP := rec( g := allElementSDP[ Position( allPairsInG, centralizer.rep ) ], rho := rho ),
+            weight := rec( g := g, rho := rho ),
+            weightSDP := rec( g := allElementSDP[ Position( allPairsInG, g ) ], rho := rho ),
             base := base,
             generatorsofgroup := GeneratorsOfGroup(Source(M_g_rho)),
             genimages := GeneratorsOfGroup(Image(M_g_rho)),
