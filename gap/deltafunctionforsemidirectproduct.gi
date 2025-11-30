@@ -3,7 +3,7 @@ InstallGlobalFunction( DeltaFunctionForSDP, function( elm1 )
         Error("the argument elm1 must be an element of the semidirect product");
     fi;
 
-    return function( y )
+    return function( elm2 )
         if not( IsElementSDPObj( elm2 ) ) then
             Error("the argument elm2 must be an element of the semidirect product");
         fi;
