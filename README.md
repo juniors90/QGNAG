@@ -1,4 +1,4 @@
-[![codecov](https://codecov.io/gh/juniors90/QGNAG/graph/badge.svg?token=16t0Y6UH8f)](https://codecov.io/gh/juniors90/QGNAG)
+[![codecov](https://codecov.io/gh/juniors90/QGNAG/graph/badge.svg?token=FWGGKQ46IC)](https://codecov.io/gh/juniors90/QGNAG)
 
 # The GAP package QGNAG
 
