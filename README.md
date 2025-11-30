@@ -1,4 +1,5 @@
 ![Build Status](https://github.com/juniors90/QGNAG/actions/workflows/CI.yml/badge.svg)
+![Docs Status](https://github.com/juniors90/QGNAG/actions/workflows/docs.yml/badge.svg)
 [![codecov](https://codecov.io/gh/juniors90/QGNAG/graph/badge.svg?token=FWGGKQ46IC)](https://codecov.io/gh/juniors90/QGNAG)
 [![issues](https://img.shields.io/github/issues/juniors90/QGNAG?color=teal)](https://github.com/juniors90/QGNAG/issues)
 [![GitHub contributors](https://img.shields.io/github/contributors/juniors90/QGNAG?color=green)](https://github.com/juniors90/QGNAG/graphs/contributors)
