@@ -12,3 +12,4 @@ ReadPackage( "QGNAG", "gap/conmutationsrulesxy.gd" );
 ReadPackage( "QGNAG", "gap/tensorelement.gd" );
 ReadPackage( "QGNAG", "gap/deltafunctionforsemidirectproduct.gd" );
 ReadPackage( "QGNAG", "gap/basisforYDmodule.gd" );
+ReadPackage( "QGNAG", "gap/tensorproductmatrix.gd");
