@@ -65,7 +65,7 @@ Dependencies := rec(
   NeededOtherPackages := [ [ "GAPDoc", ">= 1.6.1" ],
                            [ "Repsn", ">= 3.1.0" ],
                            [ "RepnDecomp", ">= 1.2.0" ] ],
-  SuggestedOtherPackages := [  ],
+  SuggestedOtherPackages := [ [ "IO", ">= 4.7.0" ] ],
   ExternalConditions := [ ],
 ),
 
