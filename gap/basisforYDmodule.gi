@@ -63,7 +63,6 @@ InstallGlobalFunction( GetCentralizerOfElement, function(G, g, allPairsInG, allE
     classSize := sizeG / sizeC;
     
     idx := Position(allPairsInG, g);
-    Print("\n idx:  ", idx);
     repElementSDP := allElementsSDP[idx];
     
     # (opcional) chequeo de consistencia con la clase de conjugación real
@@ -115,7 +114,7 @@ InstallGlobalFunction( GetSimplesModAttachedToElement, function(G, g, allPairsIn
         chi := irrepsGamma_g[ i ];;
         rho := IrreducibleAffordingRepresentation( chi );;
         M_g_rho := InducedSubgroupRepresentation( G, rho );;
-        base := TensorBasisForSimples( G, g, rho, allElementSDP );;
+        base := TensorBasisForSimples( G, g, rho, allPairsInG, allElementSDP );;
         Add( simples, rec(
             simple := M_g_rho,
             weight := rec( g := g, rho := rho ),
@@ -123,7 +122,8 @@ InstallGlobalFunction( GetSimplesModAttachedToElement, function(G, g, allPairsIn
             base := base,
             generatorsofgroup := GeneratorsOfGroup(Source(M_g_rho)),
             genimages := GeneratorsOfGroup(Image(M_g_rho)),
-            group := Source(M_g_rho)
+            G := StructureDescription(Source(M_g_rho)),
+            Gamma_g := StructureDescription(Source(rho))
         ) );
     od;
     return simples;

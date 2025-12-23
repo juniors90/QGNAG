@@ -12,3 +12,6 @@ ReadPackage( "QGNAG", "gap/tensorelement.gi");
 ReadPackage( "QGNAG", "gap/deltafunctionforsemidirectproduct.gi");
 ReadPackage( "QGNAG", "gap/basisforYDmodule.gi");
 ReadPackage( "QGNAG", "gap/tensorproductmatrix.gi");
+ReadPackage( "QGNAG", "gap/realization.gi");
+ReadPackage( "QGNAG", "gap/algebras/yjbi.gi");
+ReadPackage( "QGNAG", "gap/algebras/basiselementofverma.gi" );

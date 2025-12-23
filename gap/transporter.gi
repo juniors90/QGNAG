@@ -9,3 +9,14 @@ InstallGlobalFunction( TransporterOfG, function( G, i, j )
     od;
     return ress;
 end);
+
+InstallGlobalFunction( IndexForDeltaInConmutationRules, function(trsp, i)
+    local g, g_i, delta_index;
+    g_i := ElementSDP(i!.FieldPart, 1);;
+    
+    delta_index:=[];;
+    for g in trsp do 
+        Add(delta_index, g_i^-1 * g * g_i);
+    od;
+    return delta_index;
+end);
