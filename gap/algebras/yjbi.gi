@@ -17,6 +17,11 @@ InstallGlobalFunction( MonomialForLargeIndex, function( mono, nX )
     return [ [ large ], [ coef ] ];
 end);
 
+########
+# OJO: esto, de acá para abajo, es más general, hay que reveer la
+# arquitectura porque sirve tanto para la contrucción de la matrz
+# de Yj como dla de delta_h en la vase del modulo de verma.
+########
 
 InstallGlobalFunction( ActionkGdualOnYDModule, function( delta_h, simple, elmofB )
     local BaseMgrho, pos_wi, x, g, conj;
@@ -46,12 +51,14 @@ InstallGlobalFunction(StructureMatrixSimpleModule, function( delta_h, simple )
         fi;
     od;
     obj := rec(
-        weightSDP := simple.weightSDP,
+        weight := simple.weight,
         matrix := M
     );
 
     return obj;
 end);
+
+######## hasta acá ########
 
 
 InstallGlobalFunction(MatrixForDrinfeldDoubleElement, function(mon, simple, nX, nElemOfG)
@@ -118,23 +125,23 @@ InstallGlobalFunction( DeltaActionsFiltered4Basis, function( prod, simple, nX, n
     resMonos := [];
     resCoefs := [];
     all_deltas := List(GetElementsOfG(), x -> DeltaFunctionForSDP(x));
-    for k in [1..Length(monos)] do
+    for k in [ 1..Length(monos) ] do
         mon := monos[k];
         coef := coefs[k];
         xi := Last( mon );
         if xi in idx_deltas then
-            for conj in Conj4Basis(simple) do
+            for conj in Conj4Basis( simple ) do
                 if all_deltas[ xi - ( nX + nElemOfG ) ]( conj ) <> 0 then
-                    Add(resMonos, mon);
-                    Add(resCoefs, coef);
+                    Add( resMonos, mon );
+                    Add( resCoefs, coef );
                 fi;
             od;
         else
-            Add(resMonos, mon);
-            Add(resCoefs, coef);
+            Add( resMonos, mon );
+            Add( resCoefs, coef );
         fi;
     od;
-    return [resMonos, resCoefs];
+    return [ resMonos, resCoefs ];
 end );
 
 
@@ -156,6 +163,7 @@ InstallGlobalFunction( ExpActionOnBivk, function( prod, Yjbis_lst, simple, nX, n
         m, mon, coef, idx_i_mat, idx_j_mat, monos_to_matrix, Base_T4;
         
     monos := prod[1];
+    # Print("Longitud del monomio: ", Length(monos), "\n\n");
     coefs := prod[2];
     monos_to_matrix := [];
     

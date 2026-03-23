@@ -26,6 +26,7 @@ StringAlias@ := function(f)
     if not(f in Elements(GF(ConfigSDP.p))) then
         Error(Concatenation("fiel part must be an element of GF(p), with p:=", String(ConfigSDP.p), "."));
     fi;
+    
     if f = 0*Z(2)  then
         alias := "0";
     elif f =  Z(2)^0 then
