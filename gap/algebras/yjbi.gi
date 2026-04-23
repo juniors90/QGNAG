@@ -116,7 +116,7 @@ end);
 
 InstallGlobalFunction( DeltaActionsFiltered4Basis, function( prod, simple, nX, nElemOfG)
     local monos, coefs, resMonos, resCoefs, conj, k, all_deltas,
-    xi, mon, coef, idx_deltas, nXs, nG;
+    xi, mon, coef, idx_deltas, nXs, nG, IsConstantList, conj_basis;
  
     monos := prod[1];
     coefs := prod[2];
@@ -125,17 +125,29 @@ InstallGlobalFunction( DeltaActionsFiltered4Basis, function( prod, simple, nX, n
     resMonos := [];
     resCoefs := [];
     all_deltas := List(GetElementsOfG(), x -> DeltaFunctionForSDP(x));
+    conj_basis:=Conj4Basis( simple );
+    IsConstantList := function(L)
+        return ForAll(L, x -> x = L[1]);
+    end;
     for k in [ 1..Length(monos) ] do
         mon := monos[k];
         coef := coefs[k];
         xi := Last( mon );
         if xi in idx_deltas then
-            for conj in Conj4Basis( simple ) do
+            if IsConstantList(conj_basis) then
+                conj:=conj_basis[1];
                 if all_deltas[ xi - ( nX + nElemOfG ) ]( conj ) <> 0 then
                     Add( resMonos, mon );
                     Add( resCoefs, coef );
                 fi;
-            od;
+            else
+                for conj in conj_basis do
+                    if all_deltas[ xi - ( nX + nElemOfG ) ]( conj ) <> 0 then
+                        Add( resMonos, mon );
+                        Add( resCoefs, coef );
+                    fi;
+                od;
+            fi;
         else
             Add( resMonos, mon );
             Add( resCoefs, coef );

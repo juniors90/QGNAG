@@ -26,3 +26,19 @@ InstallGlobalFunction( TensorProductMatrix, function(A,B)
     od;
     return(matrix);
 end );
+
+InstallGlobalFunction(GetDimensions, function(M)
+    if not IsList(M) then
+        Error("The argument is not a list (matrix in GAP).");
+    fi;
+
+    if Length(M) = 0 then
+        return [0, 0];
+    fi;
+
+    if not IsList(M[1]) then
+        Error("The object does not have matrix form (list of lists).");
+    fi;
+
+    return [ Length(M), Length(M[1]) ];
+end );

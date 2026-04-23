@@ -13,3 +13,4 @@
 #! outperform GAP's <A>KroneckerProduct</A> in tests with moderately large matrices.
 #! 
 DeclareGlobalFunction( "TensorProductMatrix" );
+DeclareGlobalFunction( "GetDimensions" );
