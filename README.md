@@ -17,6 +17,15 @@ install and use it, resp. where to find out more
 TODO: add info on how to contact you and/or how to report issues with your
 package
 
+
+## Contributors
+
+Credits goes to these peoples:
+
+<a href="https://github.com/juniors90/QGNAG/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=juniors90/QGNAG" />
+</a>
+
 ## License
 
 TODO: Provide information on the license of your package. A license is
