@@ -1,0 +1,9 @@
+DeclareGlobalFunction( "CreateDataSemiYtopXtop" );
+DeclareGlobalVariable( "Y3Xtop" );
+DeclareGlobalVariable( "Y0Y3Xtop" );
+DeclareGlobalVariable( "Y2Y0Y3Xtop" );
+DeclareGlobalVariable( "Y1Y2Y0Y3Xtop" );
+DeclareGlobalVariable( "Y0Y1Y2Y0Y3Xtop" );
+DeclareGlobalVariable( "Y2Y0Y1Y2Y0Y3Xtop" );
+DeclareGlobalVariable( "Y0Y2Y0Y1Y2Y0Y3Xtop" );
+DeclareGlobalVariable( "Y1Y0Y2Y0Y1Y2Y0Y3Xtop" );

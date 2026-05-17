@@ -47,7 +47,7 @@ InstallGlobalFunction( GetCentralizers, function( G )
 end);
 
 
-InstallGlobalFunction( GetCentralizerOfElement, function(G, g, allPairsInG, allElementsSDP )
+InstallGlobalFunction( GetCentralizerOfElement, function(G, g )
     local centralizer, sizeG, sizeC, classSize, check, idx, repElementSDP;
 
     if not (g in List(ConjugacyClasses(G), Representative)) then
@@ -63,7 +63,7 @@ InstallGlobalFunction( GetCentralizerOfElement, function(G, g, allPairsInG, allE
     classSize := sizeG / sizeC;
     
     idx := Position(allPairsInG, g);
-    repElementSDP := allElementsSDP[idx];
+    repElementSDP := QGNAG_ElementsInSDP[idx];
     
     # (opcional) chequeo de consistencia con la clase de conjugación real
     check := Size(ConjugacyClass(G, g));

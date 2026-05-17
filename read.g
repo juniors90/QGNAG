@@ -15,3 +15,7 @@ ReadPackage( "QGNAG", "gap/tensorproductmatrix.gi");
 ReadPackage( "QGNAG", "gap/realization.gi");
 ReadPackage( "QGNAG", "gap/algebras/yjbi.gi");
 ReadPackage( "QGNAG", "gap/algebras/basiselementofverma.gi" );
+ReadPackage( "QGNAG", "gap/algebras/checksimples.gi");
+ReadPackage( "QGNAG", "gap/algebras/matrix_data.gi");
+ReadPackage( "QGNAG", "gap/ytopxtop/semi_ytop_xtop_ascending_words.gi");
+ReadPackage( "QGNAG", "gap/printing.gi");

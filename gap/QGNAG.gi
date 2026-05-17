@@ -1,14 +1,14 @@
 BindGlobal( "ConfigSDP", rec( p := 4, m := 6 ) );
 
-K     := DirectProduct(CyclicGroup(2), CyclicGroup(2));
-H     := CyclicGroup(6);
+K     := DirectProduct(CyclicGroup(2), CyclicGroup(2));;
+H     := CyclicGroup(6);;
 AutK  := AutomorphismGroup(K);
-T     := GroupHomomorphismByImages(H, AutK, [H.1], [List(AutK)[2]]);
-G     := SemidirectProduct(H, T, K);
-embK  := Embedding(G, 2);
-embH  := Embedding(G, 1);
-HinG  := List([0 .. Size(H) - 1], x -> embH(H.1^x));
-HKinG := Concatenation(List(K, x -> List(HinG, y -> embK(x) * y)));
+T     := GroupHomomorphismByImages(H, AutK, [H.1], [List(AutK)[2]]);;
+G     := SemidirectProduct(H, T, K);;
+embK  := Embedding(G, 2);;
+embH  := Embedding(G, 1);;
+HinG  := List([0 .. Size(H) - 1], x -> embH(H.1^x));;
+HKinG := Concatenation(List(K, x -> List(HinG, y -> embK(x) * y)));;
 
 allPairsInG := [
     Identity(G),       #1 1           (0, 0)
@@ -36,7 +36,6 @@ allPairsInG := [
     G.2^2*G.3,         #17 F2^2F3     (w^2, g^4)
     G.1*G.2^2*G.4      #23 F1F2^2F4   (w^2, g^5)  
 ];;
+# BindConstant( "allPairsInG", HKinG );
 
-# allPairsInG = HKinG
-
-BindConstant( "allPairsInG", allPairsInG );
+BindConstant( "allPairsInG", HKinG );

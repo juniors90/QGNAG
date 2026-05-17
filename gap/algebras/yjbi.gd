@@ -10,6 +10,8 @@ DeclareGlobalFunction( "NonZeroEntriesForMatrix" );
 
 DeclareGlobalFunction( "MatrixForDrinfeldDoubleElement" );
 
+DeclareGlobalFunction( "Conj4BasisElement" );
+
 DeclareGlobalFunction( "Conj4Basis" );
 
 DeclareGlobalFunction( "DeltaActionsFiltered4Basis" );

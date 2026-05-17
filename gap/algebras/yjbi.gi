@@ -106,6 +106,17 @@ InstallGlobalFunction(NonZeroEntriesForMatrix, function(A)
 end);
 
 
+InstallGlobalFunction( Conj4BasisElement, function( simple, elm_base )
+    local g_elm, conj_xgxinv, conj4basis;
+    if not (elm_base in simple.base) then
+        Error("The element elm_base is not in the base of the simple.\n");
+    fi;
+    g_elm := GetElementsOfG()[Position(allPairsInG, simple.weight.g)];;
+    conj_xgxinv := el -> (el * g_elm * el ^(-1));; ## <------ el error
+    conj4basis := conj_xgxinv(elm_base!.GroupElement);
+    return conj4basis;
+end);
+
 InstallGlobalFunction( Conj4Basis, function( simple )
     local conj_xgxinv, conj4basis;
     conj_xgxinv := el -> (el * simple.weightSDP.g * el^(-1));; ## <-------------- error
@@ -135,7 +146,7 @@ InstallGlobalFunction( DeltaActionsFiltered4Basis, function( prod, simple, nX, n
         xi := Last( mon );
         if xi in idx_deltas then
             if IsConstantList(conj_basis) then
-                conj:=conj_basis[1];
+                conj := conj_basis[1];
                 if all_deltas[ xi - ( nX + nElemOfG ) ]( conj ) <> 0 then
                     Add( resMonos, mon );
                     Add( resCoefs, coef );
