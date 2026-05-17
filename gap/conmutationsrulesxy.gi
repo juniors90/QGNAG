@@ -150,13 +150,3 @@ InstallGlobalFunction(ApplyYXCommutationOnce, function(prod)
     return [resMonos, resCoefs];
 end
 );
-
-#Versión todavía más simple:
-
-# Today I worked on the construction with an algebra and its left module.
-# I translated part of the computations into OSCAR.”
-
-# Pronunciación:
-
-# Tudéi ai uórkt on de constrákshon uith an álgebra and its left módul.
-# Ai transléitid part ov de computations intu Óscar.”
