@@ -4,7 +4,7 @@
 # This file is a script which compiles the package manual.
 #
 
-SetGapDocHTMLStyle("MathJax");
+# SetGapDocHTMLStyle("MathJax");
 
 #AutoDoc( rec( scaffold := true, autodoc := true ) );
 AutoDoc(
