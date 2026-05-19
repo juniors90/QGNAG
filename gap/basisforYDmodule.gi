@@ -123,6 +123,7 @@ InstallGlobalFunction( GetSimplesModAttachedToElement, function(G, g, allPairsIn
             generatorsofgroup := GeneratorsOfGroup(Source(M_g_rho)),
             genimages := GeneratorsOfGroup(Image(M_g_rho)),
             G := StructureDescription(Source(M_g_rho)),
+            group := Source(M_g_rho),
             Gamma_g := StructureDescription(Source(rho))
         ) );
     od;

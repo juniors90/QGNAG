@@ -1,20 +1,21 @@
 name: Docs
 
-# Trigger the workflow on push or pull request
 on:
   push:
     branches:
       - main
       - master
+
   pull_request:
 
-# the `concurrency` settings ensure that not too many CI jobs run in parallel
 concurrency:
-  # group by workflow and ref; the last slightly strange component ensures that for pull
-  # requests, we limit to 1 concurrent job, but for the default repository branch we don't
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref_name != github.event.repository.default_branch || github.run_number }}
-  # Cancel intermediate builds, but only if it is a pull request build.
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   manual:
@@ -23,13 +24,41 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+
       - uses: gap-actions/setup-gap@v3
+
       - uses: gap-actions/build-pkg-docs@v2
         with:
           use-latex: 'true'
-      - name: 'Upload documentation'
+
+      - name: Create index.html
+        run: |
+          cp doc/chap0.html doc/index.html
+
+      - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: manual
           path: ./doc/manual.pdf
           if-no-files-found: error
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./doc
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+
+    needs: manual
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
