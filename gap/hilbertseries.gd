@@ -74,7 +74,7 @@ DeclareGlobalFunction( "QGNAG_HSData" );
 #! </List>
 #!
 #! The function constructs a polynomial expression
-#! <M>H(t) = \sum_i a_i t^i</M>
+#! $H(t) = \sum_i a_i t^i$
 #! and prints it in a human-readable form.
 #!
 #! Terms with zero coefficient are omitted.
