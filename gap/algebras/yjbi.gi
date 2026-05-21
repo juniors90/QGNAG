@@ -65,8 +65,8 @@ InstallGlobalFunction(MatrixForDrinfeldDoubleElement, function(mon, simple, nX, 
     local lst, coef, M, h, i;
     # OJO: mon tiene que ser un monomio... con un polinomio
     # se complica y no lo he pensado aún
-    lst := mon[1][1];     # indices: [i1, i2, i3, ...]
-    coef := mon[2][1];    # coef, por ej. -1 o 1
+    lst  := mon[1][1];     # indices: [i1, i2, i3, ...]
+    coef := mon[2][1];     # coef, por ej. -1 o 1
 
     # Empezamos con la identidad del tamaño correcto:
     # Tomamos la del primer índice que aparezca.
@@ -92,8 +92,8 @@ end);
 
 InstallGlobalFunction(NonZeroEntriesForMatrix, function(A)
     local i, j, D;
+    
     D := [];
-
     for i in [1..Length(A)] do
         for j in [1..Length(A[i])] do
             if A[i][j] <> 0 then
@@ -111,39 +111,37 @@ InstallGlobalFunction( Conj4BasisElement, function( simple, elm_base )
     if not (elm_base in simple.base) then
         Error("The element elm_base is not in the base of the simple.\n");
     fi;
-    g_elm := GetElementsOfG()[Position(allPairsInG, simple.weight.g)];;
+    g_elm       := GetElementsOfG()[Position(allPairsInG, simple.weight.g)];;
     conj_xgxinv := el -> (el * g_elm * el ^(-1));; ## <------ el error
-    conj4basis := conj_xgxinv(elm_base!.GroupElement);
+    conj4basis  := conj_xgxinv(elm_base!.GroupElement);
     return conj4basis;
 end);
 
 InstallGlobalFunction( Conj4Basis, function( simple )
     local conj_xgxinv, conj4basis;
     conj_xgxinv := el -> (el * simple.weightSDP.g * el^(-1));; ## <-------------- error
-    conj4basis := List(simple.base, x -> conj_xgxinv(x!.GroupElement));
+    conj4basis  := List(simple.base, x -> conj_xgxinv(x!.GroupElement));
     return conj4basis;
 end);
-
 
 InstallGlobalFunction( DeltaActionsFiltered4Basis, function( prod, simple, nX, nElemOfG)
     local monos, coefs, resMonos, resCoefs, conj, k, all_deltas,
     xi, mon, coef, idx_deltas, nXs, nG, IsConstantList, conj_basis;
- 
-    monos := prod[1];
-    coefs := prod[2];
 
+    monos      := prod[1];
+    coefs      := prod[2];
     idx_deltas := [9..32];
-    resMonos := [];
-    resCoefs := [];
+    resMonos   := [];
+    resCoefs   := [];
     all_deltas := List(GetElementsOfG(), x -> DeltaFunctionForSDP(x));
     conj_basis:=Conj4Basis( simple );
     IsConstantList := function(L)
         return ForAll(L, x -> x = L[1]);
     end;
     for k in [ 1..Length(monos) ] do
-        mon := monos[k];
+        mon  := monos[k];
         coef := coefs[k];
-        xi := Last( mon );
+        xi   := Last( mon );
         if xi in idx_deltas then
             if IsConstantList(conj_basis) then
                 conj := conj_basis[1];
@@ -181,64 +179,209 @@ InstallGlobalFunction( ReducedDeltaAction, function( resY_lst, simple, nX, nElem
 end);
 
 
-InstallGlobalFunction( ExpActionOnBivk, function( prod, Yjbis_lst, simple, nX, nElemOfG, BaseNichols)
-    local monos, coefs, i, j, k, pos_bi, pos_bj, bi, bj, yj, xi, M, A, N,
-        m, mon, coef, idx_i_mat, idx_j_mat, monos_to_matrix, Base_T4;
-        
-    monos := prod[1];
-    # Print("Longitud del monomio: ", Length(monos), "\n\n");
-    coefs := prod[2];
-    monos_to_matrix := [];
-    
-    m := Length( simple.base );
-    j := Position( Yjbis_lst, prod );
-
-    Base_T4 := BaseNichols;
-    N := Length(Base_T4); # dimNichols
-    
-    for k in [1..Length(monos)] do
-        mon := monos[k];
-        coef := coefs[k];
-        xi := Last( mon );
-        if xi in [9..32] then
-            M := NullMat( N * m, N * m, Rationals );
-            i := Position( Base_T4, MonomialForSmallIndex( [[mon], [coef]], nX ) );
-            A := MatrixForDrinfeldDoubleElement( MonomialForLargeIndex( [[mon], [coef]], nX ), simple, nX, nElemOfG);
-            for idx_i_mat in [1..m] do
-                for idx_j_mat in [1..m] do
-                    if A[idx_i_mat ][idx_j_mat] <> 0 then
-                        M[ i + N * ( idx_i_mat - 1 ) ][ j + N * ( idx_j_mat - 1 ) ] := A[ idx_i_mat ][ idx_j_mat ];
-                    fi;
-                od;
-            od;
-            Add( monos_to_matrix, M );
-        elif xi in [5..8] then
-            M := NullMat( N * m, N * m, Rationals );
-            i := Position( Base_T4, MonomialForSmallIndex( [[mon], [coef]], nX ) );
-            A := MatrixForDrinfeldDoubleElement( MonomialForLargeIndex( [[mon], [coef]], nX ), simple, nX, nElemOfG);
-            for idx_i_mat in [1..m] do
-                for idx_j_mat in [1..m] do
-                    if A[idx_i_mat ][idx_j_mat] <> 0 then
-                        M[i + N * ( idx_i_mat - 1)][j + N * ( idx_j_mat - 1)] := A[idx_i_mat][idx_j_mat];
-                    fi;
-                od;
-            od;
-            Add(monos_to_matrix, M);
-        else
-            M := NullMat( N * m, N * m, Rationals );
-            i := Position( Base_T4, MonomialForSmallIndex( [[mon], [coef]], nX ) );
-            A := coef * IdentityMat( m, Rationals );            
-            for idx_i_mat in [1..m] do
-                for idx_j_mat in [1..m] do
-                    if A[idx_i_mat][idx_j_mat] <> 0 then
-                        M[i + N * ( idx_i_mat - 1)][j + N * ( idx_j_mat - 1)] := A[idx_i_mat][idx_j_mat];
-                    fi;
-                od;
-            od;
-            Add(monos_to_matrix, M);
+# %%
+InstallGlobalFunction( RemoveYterms, function(prod)
+    local monos, coefs, resMonos, resCoefs, i, ult;
+    monos    := prod[1];
+    coefs    := prod[2];
+    resMonos := [];
+    resCoefs := [];
+    for i in [1..Length(monos)] do
+        ult := Last(monos[i]);  # último índice del monomio
+        # si el último índice NO es Y0,Y1,Y2,Y3 (33..36), lo conservamos
+        if not (ult in [33, 34, 35, 36]) then
+            Add(resMonos, monos[i]);
+            Add(resCoefs, coefs[i]);
         fi;
     od;
-    
-    return Sum(monos_to_matrix);
+    return [resMonos, resCoefs];
+end);
 
+# %%
+InstallGlobalFunction( CommuteYBeforeX, function(prod)
+    local monos, coefs, resMonos, resCoefs, xIndex, yIndex,deltaIndex, groupIndex,
+        i, j, k, pos, yj, xi, rule, newMonos,
+        newCoefs, m, c, pref, suf, mon, coef, Penultimate, list_mon,_monos, _coefs;
+ 
+    monos       := prod[1];
+    coefs       := prod[2];
+    resMonos    := [];
+    resCoefs    := [];
+    Penultimate := list_mon -> list_mon[Length(list_mon) - 1];
+    xIndex      := [ 1..4 ];;
+    deltaIndex  := [ 9..32 ];;
+    yIndex      := [ 33..36 ];;
+    groupIndex  := [ 
+        [  ],               # (0, 0)
+        [ 5 ],              # (0, 1)
+        [ 6 ],              # (0, 2)
+        [ 5, 6 ],           # (0, 3)
+        [ 6, 6 ],           # (0, 4)
+        [ 5, 6, 6 ],        # (0, 5)
+        [ 8 ],              # (1, 0)
+        [ 8, 5 ],           # (1, 1)
+        [ 6, 7 ],           # (1, 2)
+        [ 5, 6, 8 ],        # (1, 3)
+        [ 6, 7, 6 ],        # (1, 4)
+        [ 5, 6, 6, 7 ],     # (1, 5)
+        [ 7 ],              # (w, 0)
+        [ 5, 8 ],           # (w, 1)
+        [ 7, 6 ],           # (w, 2)
+        [ 5, 6, 7 ],        # (w, 3)
+        [ 6, 6, 8 ],        # (w, 4)
+        [ 5, 6, 6, 7, 8 ],  # (w, 5)
+        [ 7, 8 ],           # (w^2, 0)
+        [ 5, 7 ],           # (w^2, 1)
+        [ 6, 8 ],           # (w^2, 2)
+        [ 5, 7, 6 ],        # (w^2, 3)
+        [ 6, 6, 7 ],        # (w^2, 4)
+        [ 5, 6, 6, 8 ]      # (w^2, 5)
+    ];
+    for k in [1..Length(monos)] do
+        mon  := monos[k];
+        coef := coefs[k];
+        xi   := Last( mon );
+        if Length(mon) > 1 then
+            # PrintNP([[mon], [coef]]);
+            yj := Penultimate( mon );
+            pos := Position( mon, yj );
+            # Verificar si es un par Y_i X_j
+            if yj in [33,34,35,36] and xi in [1,2,3,4] then
+                # Obtener índices i y j reales
+                j := Position([33,34,35,36], yj);   # Y_j
+                i := xi;                            # X_i
+                # Obtener la regla de conmutación correspondiente
+                rule := GetConmutationRuleOnB4w(
+                        ElementF4(Elements(GF(4))[i]),
+                        ElementF4(Elements(GF(4))[j]),
+                        xIndex,
+                        groupIndex,
+                        deltaIndex,
+                        yIndex);
+                newMonos := [];
+                newCoefs := [];
+                # prefijo y sufijo del monomio alrededor de Y_j X_i
+                pref := mon{[1..pos-1]};
+                suf  := mon{[pos+2..Length(mon)]};
+                # Expandir según la regla
+                for m in [3..Length(rule[1])] do
+                    #Print(rule[1][m], "\n");
+                    Add(resMonos, Concatenation(pref, rule[1][m], suf));
+                    Add(resCoefs, - coef * rule[2][m]);
+                od;
+            else
+                Add(resMonos, mon);
+                Add(resCoefs, coef);
+            fi;
+        else
+            Add(resMonos, mon);
+            Add(resCoefs, coef);
+        fi;
+    od;
+    return [resMonos, resCoefs];
+end);
+
+# %%
+InstallGlobalFunction( RemoveAndCommuteYInYjBis, function(Yjbis)
+    local YjbisresY, p, prod_rem_yj, cybx;
+    YjbisresY := [];;
+    for p in [1.. Length(Yjbis)] do
+        prod_rem_yj := RemoveYterms(Yjbis[p].prod);
+        cybx        := CommuteYBeforeX(prod_rem_yj);
+        Add(YjbisresY, cybx);
+    od;
+    return YjbisresY;
+end);
+
+# %%
+InstallGlobalFunction( CollectLinearCombination, function( L )
+    local words, coeffs, dict, i, w, key, res_words, res_coeffs;
+    words  := L[1];
+    coeffs := L[2];
+    dict   := rec();  # diccionario: palabra -> coeficiente total
+    for i in [1..Length(words)] do
+        w   := words[i];
+        key := String(w);   # usamos string como clave
+        if IsBound(dict.(key)) then
+            dict.(key) := dict.(key) + coeffs[i];
+        else
+            dict.(key) := coeffs[i];
+        fi;
+    od;
+    res_words  := [];
+    res_coeffs := [];
+    for key in RecNames(dict) do
+        if dict.(key) <> 0 then
+            Add(res_words, EvalString(key));
+            Add(res_coeffs, dict.(key));
+        fi;
+    od;
+    return [res_words, res_coeffs];
+end);
+
+# %%
+InstallGlobalFunction( GetInfoList, function(prod, BaseNichols)
+    local monos, coefs, InfoProd, k, mon, coef, small, large, pos;
+    monos     := prod[1];;
+    coefs     := prod[2];;
+    InfoProd  := List([1..Length(BaseNichols)], i -> [ [], [] ]);
+    for k in [1..Length(monos)] do
+        mon   := monos[k];
+        coef  := coefs[k];        
+        small := MonomialForSmallIndex([[mon],[1]], nX);
+        large := MonomialForLargeIndex([[mon],[coef]], nX);
+        pos   := Position(BaseNichols, small);
+        if pos <> fail then
+            # concatenar monomios y coeficientes
+            Append(InfoProd[pos][1], large[1]);
+            Append(InfoProd[pos][2], large[2]);
+        fi;
+    od;
+    return InfoProd;
+end );
+
+# %%
+InstallGlobalFunction( IiqToMatrix, function(I_iq, simple, list_mat)
+    local I_iq_to_matrix, info, n;
+    I_iq_to_matrix := [];
+    n              := Length(simple.base);
+    for info in I_iq do
+        if info = [ [], [] ] then
+            Add(I_iq_to_matrix, NullMat(n, n));
+        else
+            Add(I_iq_to_matrix, EvalLinearCombination(info, list_mat));
+        fi;
+    od;
+    return I_iq_to_matrix;
+end );
+
+# %%
+InstallGlobalFunction( MatrixActionYiOnNicholsBasis, function(Yibqs, simple, nX, nElemOfG, BaseNichols, mat_in_DG)
+    local YibqsresY, YibqsresYresDeltas, YibqsresYresDeltasCollected,
+    N, m, M_lambda, q, p, a, b, Yibq, I_iq, I_iq_Mat, I_iq_p, entry;
+    # Paso 1: reescritura y acción
+    YibqsresY                   := RemoveAndCommuteYInYjBis(Yibqs);
+    YibqsresYresDeltas          := ReducedDeltaAction( YibqsresY, simple, nX, nElemOfG );
+    YibqsresYresDeltasCollected := List(YibqsresYresDeltas, CollectLinearCombination);
+    N                           := Length(BaseNichols);
+    m                           := Length(simple.base);
+    M_lambda                    := NullMat(N * m, N * m);
+    # Construcción de la matriz
+    for q in [1..N] do
+        Yibq     := YibqsresYresDeltasCollected[q];
+        I_iq     := GetInfoList(Yibq, BaseNichols);
+        I_iq_Mat := IiqToMatrix(I_iq, simple, mat_in_DG);;
+        for p in [1..Length(I_iq_Mat)] do
+            I_iq_p := I_iq_Mat[p];
+            for a in [1..m] do
+                for b in [1..m] do
+                    entry := I_iq_p[a][b];
+                    if entry <> 0 then
+                        M_lambda[ N * (a - 1) + p ][ N * (b - 1) + q ] := entry;
+                    fi;
+                od;
+            od;
+        od;
+    od;
+    return M_lambda;
 end);

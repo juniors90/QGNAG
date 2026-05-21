@@ -18,4 +18,18 @@ DeclareGlobalFunction( "DeltaActionsFiltered4Basis" );
 
 DeclareGlobalFunction( "ReducedDeltaAction" );
 
-DeclareGlobalFunction( "ExpActionOnBivk" );
+DeclareGlobalFunction( "RemoveYterms" );
+
+DeclareGlobalFunction( "CommuteYBeforeX" );
+
+DeclareGlobalFunction( "RemoveAndCommuteYInYjBis" );
+
+DeclareGlobalFunction( "CollectLinearCombination" );
+
+DeclareGlobalFunction( "GetInfoList" );
+
+DeclareGlobalFunction( "IiqToMatrix" );
+
+DeclareGlobalFunction( "MatrixActionYiOnNicholsBasis" );
+
+
