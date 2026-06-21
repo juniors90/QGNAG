@@ -10,6 +10,29 @@
 #! entonces esta funcion devuelve una lista de todos los elementos $g\in \Gamma$
 #! tales que $g\cdot i=j$.
 #!
+DeclareGlobalFunction( "TransporterOfGOld" );
+#! @Arguments G, a, b
+#! @Returns
+#! A list of elements $h \in G$ such that $h a h^{-1} = b$ (in the sense implemented by
+#! <A>ElementSDP</A>).
+#!
+#! @Description
+#! This function computes the transporter set between two elements $a$ and $b$ under the
+#! conjugation action of a finite group $G$.
+#!
+#! More precisely, it returns the subset:
+#! $$
+#! \{ h \in G \mid h \cdot a \cdot h^{-1} = b \},
+#! $$
+#! where the elements are compared via <A>ElementSDP</A>.
+#!
+#! The function uses a direct filtering of the group elements, so its complexity is linear
+#! in $|G|$.
+#!
+#! @BeginExample
+#! gap> G := SymmetricGroup(3);
+#! gap> TransporterOfG(G, a, b);
+#! @EndExample
 DeclareGlobalFunction( "TransporterOfG" );
 #!
 #!

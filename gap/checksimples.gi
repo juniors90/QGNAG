@@ -15,7 +15,7 @@ InstallGlobalFunction(EvalLinearCombination, function(B, A)
 end);
 
 
-InstallGlobalFunction(CheckSimplesVermas, function(simple, nX, nElemOfG, mat_in_DG)
+InstallGlobalFunction(CheckSimplesVermas, function(simple, mat_in_DG)
     local YtopXtop, deltas_filt, deltas_filt_to_mat;
     
     YtopXtop:=
@@ -98,7 +98,7 @@ InstallGlobalFunction(CheckSimplesVermas, function(simple, nX, nElemOfG, mat_in_
            4, -4, 4, -4, 4, -12, 12, -4, -4, -4, -4,
            -4, -4, -4, -4, -6, -6, -6, 6, -4, -4, -4,
            -4, -4, -4, -12, -12 ] ];;
-    deltas_filt := DeltaActionsFiltered4Basis( YtopXtop, simple, nX, nElemOfG );
+    deltas_filt        := DeltaActionsFiltered4Basis( YtopXtop, simple );
     deltas_filt_to_mat := EvalLinearCombination(deltas_filt, mat_in_DG);
     return not IsZero(deltas_filt_to_mat);
 end);

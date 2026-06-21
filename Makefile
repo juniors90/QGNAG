@@ -85,8 +85,26 @@ endif
 # 4. Clean Target
 # ------------------------------------------------------------------------------
 
+PACKAGE := QGNAG
+
 clean:
 	@echo "Cleaning log files and temporary files..."
 	@rm -rf $(LOG_DIR)
-	# If your documentation generates files in the 'doc/' folder, add them here:
-	@rm -f doc/*.html doc/*.pdf doc/*.txt doc/*.xml doc/*.css doc/*.js doc/QGNAG.* doc/manual.*
+
+	# Documentation output
+	@rm -f doc/*.html doc/*.pdf doc/*.txt doc/*.xml \
+	       doc/*.css doc/*.js doc/manual.*
+
+	# GAPDoc temporary files
+	@rm -f ./doc/$(PACKAGE).aux \
+	       ./doc/$(PACKAGE).bbl \
+	       ./doc/$(PACKAGE).brf \
+	       ./doc/$(PACKAGE).blg \
+	       ./doc/$(PACKAGE).idx \
+	       ./doc/$(PACKAGE).ilg \
+	       ./doc/$(PACKAGE).ind \
+	       ./doc/$(PACKAGE).log \
+	       ./doc/$(PACKAGE).out \
+	       ./doc/$(PACKAGE).pnr \
+	       ./doc/$(PACKAGE).tex \
+	       ./doc/$(PACKAGE).toc

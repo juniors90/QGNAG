@@ -15,7 +15,7 @@
 #!   </Item>
 #! </List>
 #!
-#! The implementation is based on GAP object representations and
+#! The implementation is based on &GAP; object representations and
 #! attribute-storing representations.
 #!
 #! @Section Definition of Tensor Product

@@ -2,7 +2,7 @@
 #! 
 #! @Section Conmutation Rules.
 #!
-#! @Arguments
+#! @Arguments p, m
 #!
 #! @Returns
 #! A list containing all elements of the semidirect product group.
@@ -81,7 +81,7 @@ DeclareGlobalVariable( "QGNAG_ElementsInSDP" );
 #! >     yIndex);
 #! [ [ ... ], [ ... ] ]
 #! @EndExample
-DeclareGlobalFunction( "GetConmutationRuleOnB4w" );
+DeclareGlobalFunction( "GetConmutationRules" );
 #!
 #! @Arguments prod
 #!

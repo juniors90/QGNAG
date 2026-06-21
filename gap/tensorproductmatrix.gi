@@ -16,15 +16,18 @@
 ##
 ##############################################################################
 
-InstallGlobalFunction( TensorProductMatrix, function(A,B)
-    local u, v, matrix;
-    matrix:=[];
-    for u in A do
-        for v in B do
-            Add(matrix,Flat(List(u,x->x*v)));
+InstallGlobalFunction( TensorProductMatrix, function(A, B)
+    local u,v,matrix;
+
+    matrix := [];
+
+    for u in B do
+        for v in A do
+            Add(matrix, Flat(List(u, x -> x*v)));
         od;
     od;
-    return(matrix);
+
+    return matrix;
 end );
 
 InstallGlobalFunction(GetDimensions, function(M)
@@ -41,4 +44,31 @@ InstallGlobalFunction(GetDimensions, function(M)
     fi;
 
     return [ Length(M), Length(M[1]) ];
+end );
+
+#############################################################################
+##
+#F  VecMat( mat )
+##
+InstallGlobalFunction( VecMat, function( mat )
+
+    local nrows, ncols, i, j, vec;
+
+    if Length( mat ) = 0 then
+        return [];
+    fi;
+
+    nrows := Length( mat );
+    ncols := Length( mat[1] );
+
+    vec := [];
+
+    for j in [1..ncols] do
+        for i in [1..nrows] do
+            Add( vec, mat[i][j] );
+        od;
+    od;
+
+    return vec;
+
 end );

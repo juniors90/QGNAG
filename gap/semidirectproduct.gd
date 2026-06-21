@@ -24,7 +24,7 @@
 #! This section introduces the representation, category, and attributes
 #! associated to semidirect product elements.
 #!
-#! Elements are internally implemented using GAP attribute-storing
+#! Elements are internally implemented using &GAP; attribute-storing
 #! representations.
 #!
 #! @BeginExampleSession
@@ -75,7 +75,7 @@ DeclareRepresentation( "IsElementSDPRep", IsAttributeStoringRep, [] );
 #!
 DeclareCategory( "IsElementSDPObj", IsElementSDPRep and IsMultiplicativeElementWithInverse );
 #! @Description
-#! GAP type associated to semidirect product elements.
+#! &GAP; type associated to semidirect product elements.
 #!
 #! Objects created by the constructor
 #! <C>ElementSDP</C>
@@ -171,3 +171,4 @@ DeclareGlobalFunction( "ChiForSemidirectProduct" );
 #! gap> ChiForSemidirectProduct(r);
 #! -1
 #! @EndExampleSession
+DeclareGlobalFunction( "AddModM" );

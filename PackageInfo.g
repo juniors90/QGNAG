@@ -69,13 +69,15 @@ PackageDoc := rec(
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
   LongTitle := "Computations with quantum groups at a non-abelian group, including Drinfeld doubles, simple modules, characters, and Hilbert series.",
+  BibFiles := [ "doc/qgnagbib.bib" ]
 ),
 
 Dependencies := rec(
   GAP := ">= 4.11",
   NeededOtherPackages := [ [ "GAPDoc", ">= 1.6.1" ],
                            [ "Repsn", ">= 3.1.0" ],
-                           [ "RepnDecomp", ">= 1.1.0" ] ],
+                           [ "RepnDecomp", ">= 1.1.0" ] ,
+                           [ "JupyterKernel", ">= 1.5.0" ] ],
   SuggestedOtherPackages := [ [ "IO", ">= 4.7.0" ] ],
   ExternalConditions := [ ],
 ),

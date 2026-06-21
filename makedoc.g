@@ -11,6 +11,14 @@ fi;
 #AutoDoc( rec( scaffold := true, autodoc := true ) );
 AutoDoc(
     rec(
+        gapdoc := rec(
+        LaTeXOptions := rec(
+            LateExtraPreamble := """
+                \usepackage{amsmath}
+                \usepackage{amssymb}
+            """,
+        ),
+    ),
         scaffold := true,
         autodoc  := true,
         dir      := "doc/"
