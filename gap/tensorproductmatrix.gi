@@ -21,8 +21,8 @@ InstallGlobalFunction( TensorProductMatrix, function(A, B)
 
     matrix := [];
 
-    for u in B do
-        for v in A do
+    for u in A do
+        for v in B do
             Add(matrix, Flat(List(u, x -> x*v)));
         od;
     od;

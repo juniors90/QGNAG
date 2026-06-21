@@ -7,7 +7,6 @@ InstallGlobalFunction(AddModM, function(s, t)
     a   := ZmodnZObj(fam, s);
     b   := ZmodnZObj(fam, t);
     return Int(a + b);
-
 end);
 
 
@@ -68,13 +67,10 @@ ElementSDP := function( f, i )
 end;
 
 
-InstallMethod(IsDistinguishedElement, [IsElementSDPObj],
-    r -> CyclicPart(r) = 1
-);
+InstallMethod(IsDistinguishedElement, [IsElementSDPObj], r -> CyclicPart(r) = 1 );
 
 
-InstallMethod(\*, "multiply two elements of the semi-direct product", [IsElementSDPObj, IsElementSDPObj],
-    function(x, y)
+InstallMethod(\*, "multiply two elements of the semi-direct product", [IsElementSDPObj, IsElementSDPObj], function(x, y)
     local w, a, b, i, j, c, k, q;
     if not( IsElementSDPObj( x ) ) then
         Error("first argument must be an element of the semidirect product");
@@ -93,22 +89,17 @@ InstallMethod(\*, "multiply two elements of the semi-direct product", [IsElement
 end);
 
 
-InstallMethod(\=, "equiality for SDP elements", [IsElementSDPObj, IsElementSDPObj],
-    function(x,y)
-        return FieldPart(x)=FieldPart(y) and CyclicPart(y)=CyclicPart(x); 
+InstallMethod(\=, "equiality for SDP elements", [IsElementSDPObj, IsElementSDPObj], function(x,y)
+    return FieldPart(x) = FieldPart(y) and CyclicPart(y) = CyclicPart(x); 
 end);
 
 
-InstallMethod(OneOp,
-    "identity element of SDP",
-    [IsElementSDPObj],
-    function(x)
-        return ElementSDP( One(x!.FieldPart), One(x!.CyclicPart) );    
+InstallMethod(OneOp, "identity element of SDP", [IsElementSDPObj], function(x)
+    return ElementSDP( One(x!.FieldPart), One(x!.CyclicPart) );    
 end);
 
 
-InstallMethod(InverseOp, "inverse of an element of the SDP", [IsElementSDPObj],
-    function(x)
+InstallMethod(InverseOp, "inverse of an element of the SDP", [IsElementSDPObj], function(x)
     local w, a, i, ainv;
     if not( IsElementSDPObj( x ) ) then
         Error("the argument must be an element of the semidirect product");
@@ -121,15 +112,13 @@ InstallMethod(InverseOp, "inverse of an element of the SDP", [IsElementSDPObj],
 end);
 
 
-InstallMethod(ViewString, "show SDP element", [IsElementSDPObj],
-    function(x)
-        return Concatenation("( ", String(FieldPart(x))," , ",String(CyclicPart(x)), " )");
+InstallMethod(ViewString, "show SDP element", [IsElementSDPObj], function(x)
+    return Concatenation("( ", String(FieldPart(x))," , ",String(CyclicPart(x)), " )");
 end);
 
 
-InstallMethod(String, "SDP element to string", [IsElementSDPObj],
-    function(x)
-        return Alias(x);
+InstallMethod(String, "SDP element to string", [IsElementSDPObj], function(x)
+    return Alias(x);
 end);
 
 
@@ -138,5 +127,4 @@ InstallGlobalFunction( ChiForSemidirectProduct, function(x)
         Error("the argument must be an element of the semidirect product");
     fi;
     return (-1)^x!.CyclicPart;;
-end
-);;
+end);
