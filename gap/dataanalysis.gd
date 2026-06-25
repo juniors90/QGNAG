@@ -44,5 +44,7 @@ DeclareGlobalFunction( "QGNAG_PrintDecompositionSimplesByDegree" );
 #! QGNAG_PrintDecompositionSimples(rec_info_simples);
 #! degree:=0;;
 #! QGNAG_PrintDecompositionSimplesByDegree(rec_info_simples, degree);
-#!
+#! 
 DeclareGlobalFunction( "QGNAG_CharacterSummary" );
+DeclareGlobalFunction( "QGNAG_DisplayDecompositionLaTeX" );
+DeclareGlobalFunction( "QGNAG_CharacterSummaryLaTeX" );

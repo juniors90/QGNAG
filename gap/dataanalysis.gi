@@ -384,7 +384,7 @@ InstallGlobalFunction(QGNAG_CharacterSummary, function(rec_info, SimplesMn)
     local degrees, d, pair, first, charstr;
     degrees := List(RecNames(rec_info), Int);
     Sort(degrees);
-    charstr := "Char(t) = ";
+    charstr := " Char(t) = ";
     first   := true;
     for d in degrees do
         for pair in rec_info.(d) do
@@ -400,6 +400,64 @@ InstallGlobalFunction(QGNAG_CharacterSummary, function(rec_info, SimplesMn)
         od;
     od;
     Print(charstr, "\n\n");
-    Print("SUMMARY:\n");
+    Print(" SUMMARY:\n");
     QGNAG_DisplayDecomposition(rec_info, SimplesMn);
+end);
+
+
+InstallGlobalFunction(QGNAG_DisplayDecompositionLaTeX, function(rec_info, SimplesMn, SimpleNames)
+    local degrees, d, pair, idx, mult, M;
+    degrees := List(RecNames(rec_info), Int);
+    Sort(degrees);
+    for d in degrees do
+        Print("\n==================================================\n");
+        Print("Degree ", d, "\n");
+        Print("==================================================\n");
+        for pair in rec_info.(d) do
+            mult := pair[1];
+            idx  := pair[2];
+            M    := SimplesMn[idx];
+            Print("-------------------\n");
+            Print("Simple ", SimpleNames[idx]);
+            if mult > 1 then
+                Print(" (multiplicity ", mult, ")");
+            fi;
+            Print("\n");
+            Print("-------------------\n\n");
+            Print("* Weight:\n");
+            Print("  - g: ", M.weightSDP.g, "\n");
+            Print("  - rho: ", M.weightSDP.rho, "\n\n");
+            Print("* Base: ", M.base, "\n\n");
+            Print("* Dimension: ", Length(M.base), "\n");
+        od;
+    od;
+end);
+
+
+InstallGlobalFunction(QGNAG_CharacterSummaryLaTeX, function(rec_info, SimplesMn, SimpleNames)
+    local degrees, d, pair, mult, idx, first, charstr, term;
+    degrees := List(RecNames(rec_info), Int);
+    Sort(degrees);
+    charstr := "\\operatorname{Char}(t) = ";
+    first := true;
+    for d in degrees do
+        for pair in rec_info.(d) do
+            mult := pair[1];
+            idx  := pair[2];
+            if mult = 1 then
+                term := Concatenation( SimpleNames[idx], "[", String(d), "]" );
+            else
+                term := Concatenation( String(mult), "\\,", SimpleNames[idx], "[", String(d), "]" );
+            fi;
+            if first then
+                charstr := Concatenation(charstr, term);
+                first := false;
+            else
+                charstr := Concatenation(charstr, " + ", term);
+            fi;
+        od;
+    od;
+    charstr := Concatenation(charstr, "\n");
+    Print(charstr, "\n\n");
+    QGNAG_DisplayDecompositionLaTeX( rec_info, SimplesMn, SimpleNames);
 end);
