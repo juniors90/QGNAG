@@ -1,9 +1,6 @@
 5
+ <36-dimensional left-module over <algebra-with-one over CF(3), with 36 generators>>
  Hilbert polynomial: H(t) = t^3 + 4t^4 + 8t^5 + 10t^6 + 8t^7 + 4t^8 + t^9.
- Char(t) = M49[3] + M34[4] + M36[5] + M38[5] + M1[6] + M5[6] + M41[6] + M54[6]\
- + M18[7] + M19[7] + M27[8] + M50[9]
-\operatorname{Char}(t) = M(3,\tau_{12})[3] + M(4,\eta_{2})[4] + M(5,\eta_{3})[\
-5] + M(5,\eta_{1})[5] + M(0,\chi_{(0,0,0)})[6] + M(0,\chi_{(0,1,0)})[6] + M(0,\
-\tau_{00})[6] + M(0,\rho_{0})[6] + M(1,\eta_{3})[7] + M(1,\eta_{5})[7] + M(2,\
-\eta_{4})[8] + M(3,\tau_{11})[9]
+ Char(t) = M49[3] + M34[4] + M36[5] + M38[5] + M1[6] + M5[6] + M41[6] + M54[6] + M18[7] + M19[7] + M27[8] + M50[9]
+ \operatorname{Char}(t) = M(3,\tau_{12})[3] + M(4,\eta_{2})[4] + M(5,\eta_{3})[5] + M(5,\eta_{1})[5] + M(0,\chi_{(0,0,0)})[6] + M(0,\chi_{(0,1,0)})[6] + M(0,\tau_{00})[6] + M(0,\rho_{0})[6] + M(1,\eta_{3})[7] + M(1,\eta_{5})[7] + M(2,\eta_{4})[8] + M(3,\tau_{11})[9]
 

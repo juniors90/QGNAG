@@ -131,3 +131,4 @@ DeclareGlobalFunction( "EvalLinearCombination" );
 #! @EndExampleSession
 #!
 DeclareGlobalFunction( "CheckSimplesVermas" );
+DeclareGlobalFunction( "SimplesVermasOperator" );

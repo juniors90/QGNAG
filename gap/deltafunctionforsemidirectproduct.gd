@@ -74,3 +74,61 @@ DeclareGlobalFunction( "RelationsOfkGdual" );
 #! Formalmente: <A>delta_elm1(elm2)</A> es $1$ si <A>elm1 = elm2</A>,
 #! y $0$ caso contrario.
 DeclareGlobalFunction( "DeltaFunctionForSDP" );
+
+#! @Section Structure Matrices for Delta Functions
+#!
+#! @Arguments simpleM
+#! @Returns A list of records describing the nonzero actions of delta functions on the simple module <A>simpleM</A>.
+#!
+#! @Description
+#! Computes the action of all delta functions
+#! <M>\delta_h \in k^G</M>,
+#! where <M>h \in G</M>,
+#! on the simple module <A>simpleM</A>.
+#!
+#! Only nonzero structure matrices are returned.
+#!
+#! Each entry of the returned list is a record with the fields:
+#! <List>
+#!   <Item>
+#!     <C>element</C>: the group element <M>h</M>;
+#!   </Item>
+#!   <Item>
+#!     <C>conjugationBasis</C>: the list of conjugates
+#!       <M>xgx^{-1}</M>
+#!       corresponding to the basis of the module;
+#!   </Item>
+#!   <Item>
+#!     <C>matrix</C>: the corresponding structure matrix.
+#!   </Item>
+#! </List>
+#!
+#! @BeginExampleSession
+#! gap> data := NonzeroDeltaStructureMatrices(simpleM);
+#! gap> Length(data);
+#! 3
+#! gap> data[1].element;
+#! (0,3)
+#! @EndExampleSession
+DeclareGlobalFunction("NonzeroDeltaStructureMatrices");
+
+
+#! @Arguments simpleM
+#! @Returns Nothing.
+#!
+#! @Description
+#! Prints the information returned by
+#! <Ref Func="NonzeroDeltaStructureMatrices"/>
+#! in a readable format.
+#!
+#! @BeginExampleSession
+#! gap> PrintNonzeroDeltaStructureMatrices(simpleM);
+#! Basis conjugation: ...
+#! Group element: ...
+#! Matrix:
+#! ...
+#! @EndExampleSession
+DeclareGlobalFunction( "PrintNonzeroDeltaStructureMatrices" );
+DeclareGlobalFunction( "AttachDeltaStructureMatrices" );
+DeclareGlobalFunction( "PrintDeltaStructureMatrices" );
+DeclareGlobalFunction( "QGNAG_DeltaMatrixOfElement" );
