@@ -129,6 +129,7 @@ DeclareGlobalFunction("NonzeroDeltaStructureMatrices");
 #! ...
 #! @EndExampleSession
 DeclareGlobalFunction( "PrintNonzeroDeltaStructureMatrices" );
+DeclareGlobalFunction( "QGNAG_PrintDGStructureMatrices" );
 DeclareGlobalFunction( "AttachDeltaStructureMatrices" );
 DeclareGlobalFunction( "PrintDeltaStructureMatrices" );
 DeclareGlobalFunction( "QGNAG_DeltaMatrixOfElement" );

@@ -476,6 +476,7 @@ DeclareGlobalFunction( "QGNAG_DGActionMatrices" );
 #!
 #! @EndExample
 #!
+DeclareGlobalFunction( "QGNAG_ConstructDGActionMatrices" );
 DeclareGlobalFunction( "QGNAG_MatrixByDegree" );
 DeclareGlobalFunction( "QGNAG_MatrixByDegreeAlt" );
 #############################################################################

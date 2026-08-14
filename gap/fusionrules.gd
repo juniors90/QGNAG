@@ -3,5 +3,6 @@ DeclareGlobalFunction( "QGNAG_TensorProductOfSimples" );
 DeclareGlobalFunction( "QGNAG_RepresentationMatrices" );
 DeclareGlobalFunction( "QGNAG_DecomposeDGRepresentation" );
 DeclareGlobalFunction( "QGNAG_FusionRuleToLaTeX" );
+DeclareGlobalFunction( "QGNAG_FusionRuleToLaTeXForExport" );
 DeclareGlobalFunction( "QGNAG_FusionRuleToIndex" );
 DeclareGlobalFunction( "QGNAG_FusionRuleToIndexTex" );

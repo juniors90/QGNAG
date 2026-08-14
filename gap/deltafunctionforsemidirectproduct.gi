@@ -59,6 +59,33 @@ end);
 InstallGlobalFunction(PrintNonzeroDeltaStructureMatrices, function(simple)
     local data, r;
     Print("Basis: ", simple.base, "\n\n");
+    Print("Weight: \n");
+    Print("   g: ", simple.weightSDP.g, "\n");
+    Print(" rho: ", simple.weightSDP.rho, "\n\n");
+    data := NonzeroDeltaStructureMatrices(simple);
+    # StringFormatted("The algorithm has to process {} layers.", Length(pcps)-1)
+    Print("Conjugation basis: ", data[1].conjugationBasis, "\n\n");
+    #Print(data = [] and "[]\n" or data[1].conjugationBasis, "\n\n");
+    for r in data do
+        Print("Group element: ", r.element, "\n");
+        Print("Structure matrix of delta_", r.element,": \n");
+        Display(r.matrix);
+        Print("-----------------------------------------------------\n");
+    od;
+end);
+
+InstallGlobalFunction(QGNAG_PrintDGStructureMatrices, function(simple)
+    local data, r, gensG, gen;
+    Print("Basis: ", simple.base, "\n\n");
+    Print("Weight: \n");
+    Print("   g: ", simple.weightSDP.g, "\n");
+    Print(" rho: ", simple.weightSDP.rho, "\n\n");
+    gensG := GeneratorsOfGroup(Source(simple.simple));
+    for gen in gensG do
+        Print("Images on generator ", gen, ":\n");
+        Display(simple.simple(gen));
+        Print("\n");
+    od;
     data := NonzeroDeltaStructureMatrices(simple);
     # StringFormatted("The algorithm has to process {} layers.", Length(pcps)-1)
     Print("Conjugation basis: ", data[1].conjugationBasis, "\n\n");
@@ -75,7 +102,7 @@ end);
 InstallGlobalFunction(AttachDeltaStructureMatrices, function(simple)
     simple!.DeltaStructureMatrices := List(
         GetElementsOfG(),
-        el-> rec(
+        el -> rec(
                 element := el,
                 matrix  := StructureMatrixSimpleModule(
                     DeltaFunctionForSDP(el),

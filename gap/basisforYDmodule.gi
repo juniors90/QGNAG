@@ -69,12 +69,20 @@ end);
 
 
 InstallGlobalFunction( GetSimplesMod, function( G, allPairsInG)
-    local base, c, i, irrepsGamma_g, simples, rho, chi, M_g_rho, centralizers;
-
+    local base,
+          c,
+          i,
+          irrepsGamma_g,
+          simples,
+          rho,
+          chi,
+          g_idx,
+          M_g_rho,
+          centralizers;
     simples      := [];;
     centralizers := GetCentralizers( G );
-
     for c in centralizers do
+        g_idx         := Position( allPairsInG, c.rep );
         irrepsGamma_g := Irr( c.centralizer );
         for i in [ 1 .. Length( irrepsGamma_g ) ] do
             chi     := irrepsGamma_g[ i ];;
@@ -82,9 +90,16 @@ InstallGlobalFunction( GetSimplesMod, function( G, allPairsInG)
             M_g_rho := InducedSubgroupRepresentation( G, rho );;
             base    := TensorBasisForSimples( G, c.rep, rho, allPairsInG );;
             Add( simples, rec(
-                    simple := M_g_rho,
-                    weight := rec( g := c.rep, rho := rho ),
-                    base   := base
+                    simple             := M_g_rho,
+                    weight            := rec( g := c.rep, rho := rho ),
+                    weightSDP         := rec( g := QGNAG.Config.elmsG[ g_idx ], rho := rho ),
+                    base              := base,
+                    generatorsofgroup := GeneratorsOfGroup(Source(M_g_rho)),
+                    genimages         := GeneratorsOfGroup(Image(M_g_rho)),
+                    G                 := StructureDescription(Source(M_g_rho)),
+                    group             := Source(M_g_rho),
+                    Gamma_g           := StructureDescription(Source(rho)),
+                    isSimple          := true,
                 )
             );
         od;
@@ -112,7 +127,8 @@ InstallGlobalFunction( GetSimplesModAttachedToElement, function(G, g, allPairsIn
             genimages         := GeneratorsOfGroup(Image(M_g_rho)),
             G                 := StructureDescription(Source(M_g_rho)),
             group             := Source(M_g_rho),
-            Gamma_g           := StructureDescription(Source(rho))
+            Gamma_g           := StructureDescription(Source(rho)),
+            isSimple          := true,
         ) );
     od;
     return simples;

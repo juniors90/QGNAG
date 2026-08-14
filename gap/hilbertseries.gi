@@ -1,8 +1,22 @@
 
 
 InstallGlobalFunction( QGNAG_HSData, function( L, Simple, BasisNichols, NicholsGradingData)
-    local all_data_deg, s_j, coeffs, dec, degrees_HP, idx_bi, bi, deg,
-          data_deg, HScoeffs, S, BasisSubMod, DimNichols, verma_data, count, BasisMod;
+    local all_data_deg,
+          s_j,
+          coeffs,
+          dec,
+          degrees_HP,
+          idx_bi,
+          bi,
+          deg,
+          data_deg,
+          HScoeffs,
+          S,
+          BasisSubMod,
+          DimNichols,
+          verma_data,
+          count,
+          BasisMod;
     all_data_deg   := [];
     DimNichols     := Length(BasisNichols);
     BasisMod       := Basis(L);
@@ -89,7 +103,8 @@ InstallGlobalFunction( QGNAG_Character, function( L, Simple, BasisNichols, Nicho
         HScoeffs    := HScoeffs,
         VermaModule := L, 
         Socle       := S,
-        GradedBasis := graded_vectors
+        GradedBasis := graded_vectors,
+        n_gens_simple_DG := ( Length(GeneratorsOfGroup(Source(Simple.simple))) + Order( Source(Simple.simple) ) ), 
     );
 
     return verma_data;
@@ -119,4 +134,39 @@ InstallGlobalFunction( QGNAG_PrintHS, function(verma_data)
             " + "
         );;
     Print(" Hilbert polynomial: H(t) = ", poly_string, ".\n");
+end);
+
+InstallGlobalFunction(QGNAG_HilbertSeriesToLaTeX, function(filename, verma_data)
+    local out, poly_string, first, r, term;
+    out := OutputTextFile(filename, false);
+    AppendTo(out, "\\[\n");
+    AppendTo(out, "H(t)=");
+    first := true;
+    for r in Filtered(verma_data.HScoeffs, x -> x.count <> 0) do
+        if r.count = 1 then
+            if r.graded_i = 0 then
+                term := "1";
+            elif r.graded_i = 1 then
+                term := "t";
+            else
+                term := StringFormatted("t^{{{}}}", r.graded_i);
+            fi;
+        else
+            if r.graded_i = 0 then
+                term := String(r.count);
+            elif r.graded_i = 1 then
+                term := StringFormatted("{}t", r.count);
+            else
+                term := StringFormatted("{}t^{{{}}}", r.count, r.graded_i);
+            fi;
+        fi;
+        if first then
+            AppendTo(out, term);
+            first := false;
+        else
+            AppendTo(out, " + ", term);
+        fi;
+    od;
+    AppendTo(out, "\n\\]\n");
+    CloseStream(out);
 end);

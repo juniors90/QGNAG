@@ -17,12 +17,17 @@ InstallGlobalFunction( MonomialForLargeIndex, function( mono )
 end);
 
 InstallGlobalFunction( ActionkGdualOnYDModule, function( delta_h, simple, elmofB )
-    local BaseMgrho, pos_wi, x, g, conj;
+    local BaseMgrho,
+          pos_wi,
+          x,
+          g,
+          conj;
+
     BaseMgrho := simple.base;
-    pos_wi := Position(BaseMgrho, elmofB);
-    x := elmofB!.GroupElement;
-    g := simple.weightSDP.g;
-    conj := x * g * x ^ (-1);
+    pos_wi    := Position(BaseMgrho, elmofB);
+    x         := elmofB!.GroupElement;
+    g         := simple.weightSDP.g;
+    conj      := x * g * x ^ (-1);
     if delta_h(conj) <> 0 then
        return elmofB;
     else
@@ -32,9 +37,9 @@ end);
 
 InstallGlobalFunction(StructureMatrixSimpleModule, function( delta_h, simple )
     local BaseMod, bi, M, degreeMod, mon, j, m, i, obj;
-    BaseMod := simple.base;
+    BaseMod   := simple.base;
     degreeMod := Length( BaseMod );
-    M := NullMat( degreeMod, degreeMod, Rationals );
+    M         := NullMat( degreeMod, degreeMod, Rationals );
     for bi in [1..Length(BaseMod)] do
         mon := ActionkGdualOnYDModule( delta_h, simple, BaseMod[bi]);
         if mon <> 0 then
@@ -234,7 +239,7 @@ InstallGlobalFunction( RemoveAndCommuteYInYjBis, function(Yjbis)
     return YjbisresY;
 end);
 
-# %%
+
 InstallGlobalFunction( CollectLinearCombination, function( L )
     local words, coeffs, dict, i, w, key, res_words, res_coeffs;
     words  := L[1];
@@ -260,7 +265,7 @@ InstallGlobalFunction( CollectLinearCombination, function( L )
     return [res_words, res_coeffs];
 end);
 
-# %%
+
 InstallGlobalFunction( GetInfoList, function(prod, BaseNichols)
     local monos, coefs, InfoProd, k, mon, coef, small, large, pos;
     monos     := prod[1];;
@@ -281,8 +286,8 @@ InstallGlobalFunction( GetInfoList, function(prod, BaseNichols)
     return InfoProd;
 end );
 
-# %%
-InstallGlobalFunction( IiqToMatrix, function(I_iq, simple, list_mat)
+
+InstallGlobalFunction( IiqToMatrix, function(I_iq, simple, mat_in_DG)
     local I_iq_to_matrix, info, n;
     I_iq_to_matrix := [];
     n              := Length(simple.base);
@@ -290,11 +295,25 @@ InstallGlobalFunction( IiqToMatrix, function(I_iq, simple, list_mat)
         if info = [ [], [] ] then
             Add(I_iq_to_matrix, NullMat(n, n));
         else
-            Add(I_iq_to_matrix, EvalLinearCombination(info, list_mat));
+            Add(I_iq_to_matrix, EvalLinearCombination(info, mat_in_DG));
         fi;
     od;
     return I_iq_to_matrix;
 end );
+
+InstallGlobalFunction( IiqToMatrixShift, function(I_iq, simple, mat_in_DG, shift)
+    local I_iq_to_matrix, info, n;
+    I_iq_to_matrix := [];
+    n              := Length(simple.base);
+    for info in I_iq do
+        if info = [ [], [] ] then
+            Add(I_iq_to_matrix, NullMat(n, n));
+        else
+            Add( I_iq_to_matrix, EvalLinearCombinationShift(info, mat_in_DG, shift) );
+        fi;
+    od;
+    return I_iq_to_matrix;
+end);
 
 # %%
 InstallGlobalFunction( MatrixActionYiOnNicholsBasis, function(Yibqs, simple, BaseNichols, mat_in_DG)
@@ -311,7 +330,8 @@ InstallGlobalFunction( MatrixActionYiOnNicholsBasis, function(Yibqs, simple, Bas
     for q in [1..N] do
         Yibq     := YibqsresYresDeltasCollected[q];
         I_iq     := GetInfoList(Yibq, BaseNichols);
-        I_iq_Mat := IiqToMatrix(I_iq, simple, mat_in_DG);;
+        #I_iq_Mat := IiqToMatrix(I_iq, simple, mat_in_DG);;
+        I_iq_Mat := IiqToMatrixShift(I_iq, simple, mat_in_DG, QGNAG.Config.nX);
         for p in [1..Length(I_iq_Mat)] do
             I_iq_p := I_iq_Mat[p];
             for a in [1..m] do

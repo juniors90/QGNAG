@@ -32,14 +32,15 @@ end);
 
 # esta genera las matrices en DG
 InstallGlobalFunction( QGNAG_DGActionMatrices, function(simple, allPairsInG, basisNichols)
-
     local generatorData, deltaData, math_DG;
-
     generatorData := QGNAG_BuildGeneratorMatrices( simple, allPairsInG );
     deltaData     := QGNAG_DeltaActionMatrices( simple, basisNichols );
     math_DG       := Concatenation( generatorData, deltaData );
-
     return math_DG;
+end);
+
+InstallGlobalFunction( QGNAG_ConstructDGActionMatrices, function(simple, allPairsInG, BaseNichols)
+    return List( QGNAG_DGActionMatrices(simple, allPairsInG, BaseNichols), z -> z.matrix);
 end);
 
 
@@ -99,7 +100,14 @@ end);
 
 
 InstallGlobalFunction( QGNAG_MatricesByDegree, function( verma_char, Mg_matrix )
-    local FieldS, gradedMats, degrees, degStr, degree_n_vectors, V_deg, B_deg, mat;
+    local FieldS,
+          gradedMats,
+          degrees,
+          degStr,
+          degree_n_vectors,
+          V_deg,
+          B_deg,
+          mat;
     FieldS     := LeftActingDomain(verma_char.Socle);
     gradedMats := rec();
     degrees    := RecNames( verma_char.GradedBasis );

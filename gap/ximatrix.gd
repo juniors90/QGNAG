@@ -66,3 +66,4 @@
 #! <M>\mathfrak{B}(V)\otimes S</M>, where <M>S</M> is the given simple module.
 #!
 DeclareGlobalFunction( "StructureMatrixForXi" );
+DeclareGlobalFunction( "QGNAG_XiMatrixAction" );

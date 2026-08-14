@@ -4,7 +4,7 @@
 This directory contains the graded structural data of the simple module
 $$
 M(1,\eta_{0}),
-$4
+$$
 including its position in the list of simple modules, the socle dimension, Hilbert polynomial, and graded composition factors.
 
 

@@ -409,6 +409,8 @@ DeclareGlobalFunction( "GetInfoList" );
 
 DeclareGlobalFunction( "IiqToMatrix" );
 
+DeclareGlobalFunction( "IiqToMatrixShift" );
+
 DeclareGlobalFunction( "MatrixActionYiOnNicholsBasis" );
 
 

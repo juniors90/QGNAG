@@ -28,3 +28,5 @@ ReadPackage( "QGNAG", "gap/homspace.gd");
 ReadPackage( "QGNAG", "gap/dataanalysis.gd" );
 ReadPackage( "QGNAG", "gap/visualization.gd" );
 ReadPackage( "QGNAG", "gap/fusionrules.gd" );
+ReadPackage( "QGNAG", "gap/quantumcharacters.gd" );
+ReadPackage( "QGNAG", "gap/braided.gd" );

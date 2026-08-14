@@ -99,4 +99,9 @@
 #! >      );
 #! @EndExample
 #!
+DeclareGlobalFunction( "QGNAG_NicholsBasisAction" ); 
+DeclareGlobalFunction( "QGNAG_GroupActionOnNicholsBasis" );
+DeclareGlobalFunction( "QGNAG_ActionBlocksByGenerator" );
+DeclareGlobalFunction( "QGNAG_BlockMatricesByDegree" );
 DeclareGlobalFunction( "StructureMatrixOfG" );
+DeclareGlobalFunction( "QGNAG_GiMatrixAction" );

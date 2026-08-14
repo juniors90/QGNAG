@@ -26,6 +26,7 @@ InstallGlobalFunction(QGNAG_TensorProductOfSimples, function( simple1, simple2 )
     gens   := simple1.generatorsofgroup;
     gen1   := simple1.genimages;
     gen2   := simple2.genimages;
+    
     mgens  := List( [1..Length( gens )], i -> KroneckerProduct( gen2[i], gen1[i] ) );
     newrho := GroupHomomorphismByImages( simple1.group , Group( mgens ), gens, mgens );
     rep    := rec(
@@ -35,6 +36,7 @@ InstallGlobalFunction(QGNAG_TensorProductOfSimples, function( simple1, simple2 )
         # irreps            := simple1.irreps, # new feature
         genimages         := mgens,
         isRepresentation  := true,
+        isSimple          := false,
         # isIrreps          := newrho in simple1.irreps,
         dimension         := Length(mgens[1]),
         base              := QGNAG_TensorBasisOfProductOfSimples(simple1, simple2),
@@ -57,8 +59,14 @@ end);
 
 
 InstallGlobalFunction(QGNAG_RepresentationMatrices, function(simple)
+    local genimages;
     if not IsBound(simple!.DeltaStructureMatrices) then
         Error("Run AttachDeltaStructureMatrices(simple) first.");
+    fi;
+    if simple.isSimple then
+        genimages := List(GeneratorsOfGroup(Source(simple.simple)), x -> simple.simple(x) );
+    else
+        genimages := simple.genimages;
     fi;
     return Concatenation( simple.genimages, List( simple.DeltaStructureMatrices, r -> r.matrix ) );
 end);
@@ -68,7 +76,7 @@ InstallGlobalFunction(QGNAG_DecomposeDGRepresentation, function(rep, simples)
     local result, remaining, s, rho, degree_s, mats_rep, mats_s, mult_s;
     result    := [];
     remaining := DegreeOfRepresentation(rep.rho);
-    mats_rep  := QGNAG_RepresentationMatrices(rep);
+    mats_rep  := QGNAG_RepresentationMatrices(rep); # tomo las matrices
     for s in simples do
         rho      := s.simple;
         degree_s := DegreeOfRepresentation(rho);
@@ -116,8 +124,33 @@ InstallGlobalFunction(QGNAG_FusionRuleToLaTeX, function(M, simples, simpleNames)
     return Concatenation( lhs, " \\simeq ", rhs );
 end);
 
+InstallGlobalFunction(QGNAG_FusionRuleToLaTeXForExport, function(M, simples, simpleNames)
+    local lhs, rhs, term, mult, simple, pos, decomposition, name1, name2;
+    name1 := simpleNames[Position(simples, M.simples[1])];
+    name2 := simpleNames[Position(simples, M.simples[2])];
+    lhs   := StringFormatted("{} &\\otimes {}", name1, name2);
+    rhs   := "";
+    decomposition := QGNAG_DecomposeDGRepresentation(M, simples);
+    for term in decomposition do
+        mult   := term[1];
+        simple := term[2];
+        pos    := Position(simples, simple);
 
-InstallGlobalFunction(QGNAG_FusionRuleToIndex, function(M, simples, simpleNames)
+        if rhs <> "" then
+            rhs := Concatenation(rhs, " \\oplus ");
+        fi;
+
+        if mult = 1 then
+            rhs := Concatenation( rhs, simpleNames[pos] );
+        else
+            rhs := Concatenation( rhs, String(mult), " ", simpleNames[pos] );
+        fi;
+    od;
+    return Concatenation( lhs, " \\simeq ", rhs );
+end);
+
+
+InstallGlobalFunction(QGNAG_FusionRuleToIndex, function(M, simples)
     local lhs, rhs, term, mult, simple, pos, decomposition;
     lhs := Concatenation( "M", String(Position( simples, M.simples[1] )), " \\otimes M", String(Position( simples, M.simples[2] )) );
     rhs := "";

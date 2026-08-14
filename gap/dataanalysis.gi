@@ -1,11 +1,12 @@
 
+
 InstallGlobalFunction( QGNAG_VermaModuleSocleDecomposition, function( AllMatricesDG, AllMatricesByDegree )
     local r, result, keys, key, s, sum, first, value, MatricesByDegree, DGActionMatrices;
     r := Length(AllMatricesByDegree);
     if r = 0 then
         return rec();
     fi;
-    keys             :=  List(RecNames(AllMatricesByDegree[1]), Int);
+    keys             := List(RecNames(AllMatricesByDegree[1]), Int);
     result           := rec();
     DGActionMatrices := List(AllMatricesDG, z -> z.matrix);
     Sort(keys); 
@@ -28,6 +29,19 @@ InstallGlobalFunction( QGNAG_VermaModuleSocleDecomposition, function( AllMatrice
     od;
     return result;
 end);
+
+
+InstallGlobalFunction(QGNAG_SimpleVermaModuleDecomposition, function(Simples, allPairsInG, BaseNichols, AllMatricesByDegree)
+    local record_data_decomp, simple, DGActMat, decomp_char_s;
+    record_data_decomp := [];
+    for simple in Simples do
+        DGActMat := QGNAG_DGActionMatrices( simple, allPairsInG, BaseNichols );
+        decomp_char_s := QGNAG_VermaModuleSocleDecomposition( DGActMat, AllMatricesByDegree );
+        Add(record_data_decomp, decomp_char_s);
+    od;
+    return record_data_decomp;
+end);
+
 
 
 InstallGlobalFunction(QGNAG_RecordToHTMLTable, function(data_record, col_key, col_value, show_index)
@@ -204,6 +218,118 @@ InstallGlobalFunction(QGNAG_RecordListToHTMLTable, function(record_list, show_in
 end);
 
 
+InstallGlobalFunction( QGNAG_FilterZeroSimples, function( record_list )
+    local indices, filtered_list;
+
+    if Length(record_list) = 0 then
+        return rec( records := [], indices := [] );
+    fi;
+    indices := Filtered( [1 .. Length(record_list)], i -> ForAny( RecNames(record_list[i]), degree -> record_list[i].(degree) <> 0 ) );
+    filtered_list := List(indices, i -> record_list[i] );
+    return rec( records := filtered_list, indices := indices );
+end);
+
+
+
+InstallGlobalFunction( QGNAG_RecordListToHTMLTableFiltered, function( record_list, show_index )
+    local filtered,
+              records,
+              indices,
+              degrees,
+              degree,
+              i,
+              html;
+
+        if Length(record_list) = 0 then
+            Error("Empty list.");
+        fi;
+
+        filtered := QGNAG_FilterZeroSimples(record_list);
+
+        records := filtered.records;
+        indices := filtered.indices;
+
+        if Length(records) = 0 then
+            Error("All simples have zero multiplicity.");
+        fi;
+
+        degrees := RecNames(records[1]);
+
+        degrees := List(degrees, Int);
+        Sort(degrees);
+        degrees := List(degrees, String);
+
+        html := "<table border=\"1\" class=\"dataframe\">\n";
+
+        html := Concatenation(
+            html,
+            "  <thead>\n",
+            "    <tr style=\"text-align: right;\">\n",
+            "      <th></th>\n"
+        );
+
+        # Columnas = simples M_i
+        for i in [1 .. Length(indices)] do
+            html := Concatenation(
+                html,
+                "      <th>M",
+                String(indices[i]),
+                "</th>\n"
+            );
+        od;
+
+        html := Concatenation(
+            html,
+            "    </tr>\n",
+            "  </thead>\n",
+            "  <tbody>\n"
+        );
+
+        # Filas = grados
+        for degree in degrees do
+
+            html := Concatenation(
+                html,
+                "    <tr>\n",
+                "      <td>",
+                degree,
+                "</td>\n"
+            );
+
+            for i in [1 .. Length(records)] do
+
+                html := Concatenation(
+                    html,
+                    "      <td>",
+                    String(records[i].(degree)),
+                    "</td>\n"
+                );
+
+            od;
+
+            html := Concatenation(
+                html,
+                "    </tr>\n"
+            );
+
+        od;
+
+        html := Concatenation(
+            html,
+            "  </tbody>\n",
+            "</table>"
+        );
+
+        return JupyterRenderable(
+            rec(
+                text\/html := html
+            ),
+            rec()
+        );
+    end
+);
+
+
 InstallGlobalFunction(QGNAG_FilterZeroRows, function(record_list)
     local cols, nonzero_cols, col, r, new_list, new_rec;
     if Length(record_list) = 0 then
@@ -245,7 +371,11 @@ end);
 
 
 InstallGlobalFunction(QGNAG_Decomposition, function(record_list)
-    local result, degree, col, coeff, terms;
+    local result,
+          degree,
+          col,
+          coeff,
+          terms;
     result := rec();
     for degree in RecNames(record_list[1]) do
         terms := [];
@@ -460,4 +590,133 @@ InstallGlobalFunction(QGNAG_CharacterSummaryLaTeX, function(rec_info, SimplesMn,
     charstr := Concatenation(charstr, "\n");
     Print(charstr, "\n\n");
     QGNAG_DisplayDecompositionLaTeX( rec_info, SimplesMn, SimpleNames);
+end);
+
+InstallGlobalFunction(QGNAG_CharacterSummaryToLaTeX, function(filename, rec_info, SimpleNames)
+    local out, degrees, d, pair, mult, idx, first, term;
+    out := OutputTextFile(filename, false);
+    AppendTo(out, "\\[\n");
+    AppendTo(out, "\\operatorname{Char}(t)=");
+    degrees := List(RecNames(rec_info), Int);
+    Sort(degrees);
+    first := true;
+    for d in degrees do
+        for pair in rec_info.(String(d)) do
+            mult := pair[1];
+            idx  := pair[2];
+            if mult = 1 then
+                term := StringFormatted("{}[{}]", SimpleNames[idx], d);
+            else
+                term := StringFormatted("{}\\,{}[{}]", mult,SimpleNames[idx], d);
+            fi;
+
+            if first then
+                AppendTo(out, term);
+                first := false;
+            else
+                AppendTo(out, " + ", term);
+            fi;
+        od;
+    od;
+    AppendTo(out, "\n\\]\n");
+    CloseStream(out);
+end);
+
+
+InstallGlobalFunction(QGNAG_LoadHilbertPolynomialsToLaTeX, function(filename, verma_data, SimpleNames)
+    local out,
+          i,
+          data,
+          name,
+          LName,
+          r,
+          term,
+          poly,
+          first,
+          dim;
+
+    out := OutputTextFile(filename, false);
+    AppendTo(out, "\\subsection{Hilbert Polynomials}\n\n");
+    AppendTo(out, "\\begin{center}\n");
+    AppendTo(out, "\\begin{tabular}{c|c|c}\n");
+    AppendTo(out, "\\hline\n");
+    AppendTo(out, "$L(s,\\varrho)$ & $\\dim$ & Hilbert polynomial $H(t)$ \\\\\n");
+    AppendTo(out, "\\hline\n");
+    for i in [1..Length(verma_data)] do
+        data  := verma_data[i];
+        name  := SimpleNames[i]; # M(s,rho) -> s,rho
+        LName := name{[3..Length(name)-1]};
+        dim   := Sum(data.HScoeffs, r -> r.count); # Dimension
+        poly  := ""; # Hilbert polynomial
+        first := true;
+        for r in Filtered(data.HScoeffs, x -> x.count <> 0) do
+            if r.graded_i = 0 then
+                if r.count = 1 then
+                    term := "1";
+                else
+                    term := String(r.count);
+                fi;
+            elif r.graded_i = 1 then
+                if r.count = 1 then
+                    term := "t";
+                else
+                    term := StringFormatted("{}t", r.count);
+                fi;
+            else
+                if r.count = 1 then
+                    term := StringFormatted("t^{{{}}}", r.graded_i);
+                else
+                    term := StringFormatted("{}t^{{{}}}", r.count, r.graded_i);
+                fi;
+            fi;
+            if first then
+                poly := term;
+                first := false;
+            else
+                poly := Concatenation(poly, " + ", term);
+            fi;
+        od;
+        AppendTo(out, "$L(", LName, ")$ & $", String(dim), "$ & $", poly, "$ \\\\\n");
+    od;
+    AppendTo(out, "\\hline\n");
+    AppendTo(out, "\\end{tabular}\n");
+    AppendTo(out, "\\end{center}\n");
+    CloseStream(out);
+end);
+
+InstallGlobalFunction(QGNAG_LoadCharactersToLaTeX, function(filename, data_rec_info, SimpleNames)
+    local out, i, rec_info, degrees, d, pair, mult, idx, first, term, LName;
+    out := OutputTextFile(filename, false);
+    for i in [1..Length(data_rec_info)] do
+        rec_info := data_rec_info[i];
+        # Obtener e,rho a partir de M(e,rho)
+        LName := SimpleNames[i]{[3..Length(SimpleNames[i])-1]};
+        AppendTo(out, "\\subsubsection{$L(", LName, ")$}\n");
+        AppendTo(out, "\\[\n");
+        AppendTo(out, "\\operatorname{Char}(", LName, ")=");
+        degrees := List(RecNames(rec_info), Int);
+        Sort(degrees);
+        first := true;
+        for d in degrees do
+            for pair in rec_info.(String(d)) do
+                mult := pair[1];
+                idx  := pair[2];
+                if mult = 1 then
+                    term := StringFormatted("{}[{}]",
+                        SimpleNames[idx], d);
+                else
+                    term := StringFormatted("{}\\,{}[{}]",
+                        mult, SimpleNames[idx], d);
+                fi;
+                if first then
+                    AppendTo(out, term);
+                    first := false;
+                else
+                    AppendTo(out, " + ", term);
+                fi;
+            od;
+        od;
+        AppendTo(out, "\n\\]\n\n");
+    od;
+    CloseStream(out);
 end);

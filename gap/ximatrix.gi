@@ -25,3 +25,7 @@ InstallGlobalFunction( StructureMatrixForXi, function(
     od;
     return M;
 end );
+
+InstallGlobalFunction( QGNAG_XiMatrixAction, function(XiMatrixOnNichols, simple)
+    return DirectSumMat( List( [1..Length(simple.base)], i -> XiMatrixOnNichols ));
+end);

@@ -130,5 +130,19 @@ DeclareGlobalFunction( "EvalLinearCombination" );
 #! true
 #! @EndExampleSession
 #!
+
+
+DeclareGlobalFunction( "EvalWordShift" );
+DeclareGlobalFunction( "EvalLinearCombinationShift" );
+
+DeclareGlobalFunction( "QGNAG_ShiftPolynomial" );
+DeclareGlobalFunction( "QGNAG_ShiftPolynomialList" );
+
+DeclareGlobalFunction( "QGNAG_TestRelationsForDGModSimple" );
+DeclareGlobalFunction( "QGNAG_TestRelationsForDGModSimples" );
+DeclareGlobalFunction( "QGNAG_TestRelationsForAllDegrees" );
 DeclareGlobalFunction( "CheckSimplesVermas" );
+
 DeclareGlobalFunction( "SimplesVermasOperator" );
+
+DeclareGlobalFunction( "QGNAG_CheckRelationsShift" );

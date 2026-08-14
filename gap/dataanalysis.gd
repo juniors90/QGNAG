@@ -26,11 +26,14 @@
 #!
 #! @Arguments AllMatricesDG, AllMatricesByDegree
 #! @Returns a record indexed by degree
-DeclareGlobalFunction("QGNAG_VermaModuleSocleDecomposition");
+DeclareGlobalFunction( "QGNAG_VermaModuleSocleDecomposition");
+DeclareGlobalFunction( "QGNAG_SimpleVermaModuleDecomposition" );
 DeclareGlobalFunction( "QGNAG_RecordToHTMLTable" );
 DeclareGlobalFunction( "QGNAG_RecordOfListsToHTMLTable" );
 DeclareGlobalFunction( "QGNAG_GradedRecordToColumns" );
 DeclareGlobalFunction( "QGNAG_RecordListToHTMLTable" );
+DeclareGlobalFunction( "QGNAG_FilterZeroSimples" );
+DeclareGlobalFunction( "QGNAG_RecordListToHTMLTableFiltered" );
 DeclareGlobalFunction( "QGNAG_FilterZeroRows" );
 DeclareGlobalFunction( "QGNAG_DecompositionSummary" );
 DeclareGlobalFunction( "QGNAG_Decomposition" );
@@ -48,3 +51,6 @@ DeclareGlobalFunction( "QGNAG_PrintDecompositionSimplesByDegree" );
 DeclareGlobalFunction( "QGNAG_CharacterSummary" );
 DeclareGlobalFunction( "QGNAG_DisplayDecompositionLaTeX" );
 DeclareGlobalFunction( "QGNAG_CharacterSummaryLaTeX" );
+DeclareGlobalFunction( "QGNAG_CharacterSummaryToLaTeX" );
+DeclareGlobalFunction( "QGNAG_LoadHilbertPolynomialsToLaTeX" );
+DeclareGlobalFunction( "QGNAG_LoadCharactersToLaTeX" );

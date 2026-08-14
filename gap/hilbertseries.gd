@@ -183,4 +183,4 @@ DeclareGlobalFunction( "QGNAG_Character" );
 #!
 #! @EndExample
 DeclareGlobalFunction( "QGNAG_PrintHS" );
-
+DeclareGlobalFunction( "QGNAG_HilbertSeriesToLaTeX" );
