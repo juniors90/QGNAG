@@ -100,7 +100,8 @@ InstallGlobalFunction(QGNAG_GradedFusionMultiplicity, function( index_s, index_k
 
     result := 0;
     for index_i in [1 .. Length(SimplesMn)] do
-        N_ik_s  := QGNAG_FusionMultiplicity( index_i, index_s, index_k, SimplesMn );
+        # Mi_tensor_Ms_mats, Mk_mats
+        N_ik_s  := QGNAG_FusionMultiplicity( index_i, index_s, index_k, SimplesMn ); 
         b_ij    := QGNAG_GradedMultiplicity( index_i, index_j, rec_info_nichols );
         result  := result + N_ik_s * b_ij;
     od;    
@@ -373,9 +374,9 @@ InstallGlobalFunction( QGNAG_SaveAllQPToLaTeX, function(filename, data_record_da
           epsilon,
           coefficients,
           result;
-    out := OutputTextFile(filename, false);
-    nu  := QGNAG_AllShiftedVectorsLeft( data_record_data_decomp);
-    A   := TransposedMat(nu);
+    out           := OutputTextFile(filename, false);
+    nu            := QGNAG_AllShiftedVectorsLeft( data_record_data_decomp);
+    A             := TransposedMat(nu);
     NuVectorNames := QGNAG_NuVectorNames(data_record_data_decomp);
     for index in [1..Length(data_record_data_decomp)] do
         epsilon := QGNAG_GradedFusionVector( index, SimplesMn, rec_info_nichols );

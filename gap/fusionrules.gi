@@ -72,7 +72,7 @@ InstallGlobalFunction(QGNAG_RepresentationMatrices, function(simple)
 end);
 
 
-InstallGlobalFunction(QGNAG_DecomposeDGRepresentation, function(rep, simples)
+InstallGlobalFunction( QGNAG_DecomposeDGRepresentation, function(rep, simples)
     local result, remaining, s, rho, degree_s, mats_rep, mats_s, mult_s;
     result    := [];
     remaining := DegreeOfRepresentation(rep.rho);
@@ -191,3 +191,117 @@ InstallGlobalFunction(QGNAG_FusionRuleToIndexTex, function(M, simples, simpleNam
     od;
     return Concatenation( lhs, " \\simeq ", rhs );
 end);
+
+
+InstallGlobalFunction(QGNAG_WriteFusionRuleToLaTeX, function(out, M, simples, simpleNames)
+
+    local decomposition, term, mult, simple, pos, first;
+
+    AppendTo(
+        out,
+        simpleNames[Position(simples, M.simples[1])],
+        " &\\otimes ",
+        simpleNames[Position(simples, M.simples[2])],
+        " \\simeq "
+    );
+
+    decomposition := QGNAG_DecomposeDGRepresentation(M, simples);
+
+    first := true;
+    for term in decomposition do
+        if not first then
+            AppendTo(out, " \\oplus ");
+        fi;
+        first := false;
+
+        mult   := term[1];
+        simple := term[2];
+        pos    := Position(simples, simple);
+
+        if mult = 1 then
+            AppendTo(out, simpleNames[pos]);
+        else
+            AppendTo(out, String(mult), " ", simpleNames[pos]);
+        fi;
+    od;
+end );
+
+
+InstallGlobalFunction( QGNAG_WriteFusionRuleToLaTeXWithIndex, function(out, M, simples)
+
+    local decomposition, term, mult, simple, pos, first;
+
+    AppendTo(
+        out,
+        "M_{", Position(simples, M.simples[1]),
+        "} &\\otimes M_{",
+        Position(simples, M.simples[2]),
+        "} \\simeq "
+    );
+    decomposition := QGNAG_DecomposeDGRepresentation(M, simples);
+    first := true;
+    for term in decomposition do
+        if not first then
+            AppendTo(out, " \\oplus ");
+        fi;
+        first := false;
+
+        mult   := term[1];
+        simple := term[2];
+        pos    := Position(simples, simple);
+
+        if mult = 1 then
+            AppendTo(out, "M_{", String(pos), "}");
+        else
+            AppendTo(out, String(mult), "M_{", String(pos), "}");
+        fi;
+    od;
+
+end);
+
+
+InstallGlobalFunction( QGNAG_ExportFusionRulesToLaTeXSingleLong, function(filename, Simples, SimplesMn, SimpleNames, maxTerms)
+    local out, i, j, n, tensorproduct, decomposition, pending;
+    out := OutputTextFile(filename, false);
+    n   := Length(Simples);
+    for i in [2..n] do
+        AppendTo(out, StringFormatted( "\\subsubsection{{$ {}\\otimes -$}}\n\\begin{{align*}}\n", SimpleNames[i] ) );
+        pending := false;
+        for j in [i..n] do
+            tensorproduct := QGNAG_TensorProductOfSimples(Simples[i], Simples[j]);
+            decomposition := QGNAG_DecomposeDGRepresentation( tensorproduct, SimplesMn );
+
+            #
+            # Regla demasiado larga: siempre ocupa una línea.
+            #
+            if Length(decomposition) > maxTerms then
+                if pending then
+                    AppendTo(out, "\\\\\n");
+                    pending := false;
+                fi;
+                QGNAG_WriteFusionRuleToLaTeX( out, tensorproduct, SimplesMn, SimpleNames );
+                AppendTo(out, "\\\\\n");
+            #
+            # Regla corta.
+            #
+            else
+                if not pending then
+                    QGNAG_WriteFusionRuleToLaTeX( out, tensorproduct, SimplesMn, SimpleNames );
+                    pending := true;
+                else
+                    AppendTo(out, " &&& ");
+                    QGNAG_WriteFusionRuleToLaTeX( out, tensorproduct, SimplesMn, SimpleNames );
+                    AppendTo(out, "\\\\\n");
+                    pending := false;
+                fi;
+            fi;
+        od;
+        if pending then
+            AppendTo(out, "\n");
+        fi;
+        AppendTo(out, "\\end{align*}\n\n");
+    od;
+    CloseStream(out);
+end);
+
+

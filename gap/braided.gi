@@ -1,30 +1,53 @@
 InstallGlobalFunction(QGNAG_PermutationFromRecInfo, function( data_rec_info )
-    local ModuleData,
-          i,
+    local i,
           rec_info,
           degrees,
           top_degree,
           bottom_degree,
           top_modules,
           bottom_modules,
-          j,
+          top_module,
+          bottom_module,
           perm_list;
 
-    ModuleData := List([1..Length(data_rec_info)], i -> rec( top := i, bottom := fail));
+    perm_list := [1..Length(data_rec_info)];
+
     for i in [1..Length(data_rec_info)] do
-        rec_info      := data_rec_info[i];
-        degrees       := List(RecNames(rec_info), Int);
-        top_degree    := Maximum(degrees);
+
+        rec_info := data_rec_info[i];
+
+        degrees := List(RecNames(rec_info), Int);
+
+        top_degree := Maximum(degrees);
         bottom_degree := Minimum(degrees);
-        top_modules   := Filtered( rec_info.(String(top_degree)), x -> x[2] = i ); # M_i debe aparecer en el top degree
+
+        # Unique module in the top degree.
+        top_modules := rec_info.(String(top_degree));
+
         if Length(top_modules) <> 1 then
-            Error( "M", i, " does not appear uniquely in the top degree of data_rec_info[", i, "]" );
+            Error(
+                "Top degree of data_rec_info[", i,
+                "] does not contain a unique module"
+            );
         fi;
-        bottom_modules       := rec_info.(String(bottom_degree)); # El módulo que aparece en el bottom degree
-        j                    := First(bottom_modules, x -> x[1] >= 1)[2];
-        ModuleData[i].bottom := j;
+
+        top_module := top_modules[1][2];
+
+        # Module in the bottom degree.
+        bottom_modules := rec_info.(String(bottom_degree));
+
+        if Length(bottom_modules) <> 1 then
+            Error(
+                "Bottom degree of data_rec_info[", i,
+                "] does not contain a unique module"
+            );
+        fi;
+
+        bottom_module := bottom_modules[1][2];
+
+        perm_list[top_module] := bottom_module;
     od;
-    perm_list := List(ModuleData, x -> x.bottom);
+
     return PermList(perm_list);
 end);
 
