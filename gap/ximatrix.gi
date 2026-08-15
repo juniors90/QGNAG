@@ -29,3 +29,20 @@ end );
 InstallGlobalFunction( QGNAG_XiMatrixAction, function(XiMatrixOnNichols, simple)
     return DirectSumMat( List( [1..Length(simple.base)], i -> XiMatrixOnNichols ));
 end);
+
+InstallGlobalFunction( QGNAG_DecompNicholsAlgebra, function(Simples, allPairsInG, baseNichols, block_mats)
+    local record_data,
+          s,
+          DGActMat,
+          decomp_char_s;
+
+    record_data := [];
+    
+    for s in Simples do
+        DGActMat      := QGNAG_DGActionMatrices(s, allPairsInG, baseNichols);
+        decomp_char_s := QGNAG_VermaModuleSocleDecomposition(DGActMat, block_mats);
+        Add(record_data, decomp_char_s);
+    od;
+
+    return record_data;
+end);

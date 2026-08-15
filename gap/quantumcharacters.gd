@@ -1,7 +1,7 @@
 DeclareGlobalFunction( "QGNAG_MultiplicitiesAtDegree" );
 DeclareGlobalFunction( "QGNAG_MultiplicitiesByDegree" );
 DeclareGlobalFunction( "QGNAG_DecompositionFromMultiplicities" );
-# ---------------------- \varrho_i----------------------- #
+# ---------------------- \varrho_i -------------------------------- #
 DeclareGlobalFunction( "QGNAG_FusionMultiplicity" );
 DeclareGlobalFunction( "QGNAG_GradedMultiplicity" );
 DeclareGlobalFunction( "QGNAG_GradedFusionMultiplicity" );
@@ -13,4 +13,19 @@ DeclareGlobalFunction( "QGNAG_AllCharToShiftedVectorsLeft" );
 DeclareGlobalFunction( "QGNAG_AllShiftedVectorsLeft" );
 DeclareGlobalFunction( "QGNAG_CharToShiftedVectorLeft" );
 DeclareGlobalFunction( "QGNAG_NuVectorNames" );
+DeclareGlobalFunction( "QGNAG_PrintQP" );
+DeclareGlobalFunction( "QGNAG_QPToLaTeX" );
+DeclareGlobalFunction( "QGNAG_SaveQPToLaTeX" );
+DeclareGlobalFunction( "QGNAG_SaveAllQPToLaTeX" );
 # ----------------------------------------------------------------- #
+DeclareGlobalFunction( "QGNAG_VectorToLaTeX" );
+DeclareGlobalFunction( "QGNAG_SaveNuVectorsToLaTeX" );
+DeclareGlobalFunction( "QGNAG_SaveNuTableToLaTeX" );
+DeclareGlobalFunction( "QGNAG_SaveAllTPolynomialsToLaTeX" );
+DeclareGlobalFunction( "QGNAG_SaveBasisNuToLaTeX" );
+# ----------------------------------------------------------------- #
+DeclareGlobalFunction( "QGNAG_AllTPolynomialsToRecord" );
+# ----------------------------------------------------------------- #
+DeclareGlobalFunction( "QGNAG_ClassifySimplesIntoBlocks" );
+DeclareGlobalFunction( "QGNAG_ClassifySimplesIntoBlocksContiguous" );
+DeclareGlobalFunction( "QGNAG_SaveBlockClassificationToLaTeX" );

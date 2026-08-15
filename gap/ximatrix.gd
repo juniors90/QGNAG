@@ -67,3 +67,4 @@
 #!
 DeclareGlobalFunction( "StructureMatrixForXi" );
 DeclareGlobalFunction( "QGNAG_XiMatrixAction" );
+DeclareGlobalFunction( "QGNAG_DecompNicholsAlgebra" );
