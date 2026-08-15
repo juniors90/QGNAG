@@ -4,3 +4,6 @@ DeclareGlobalFunction( "QGNAG_FusionMultiplicityRecord" );
 DeclareGlobalFunction( "QGNAG_PrintFusionRules" );
 DeclareGlobalFunction( "QGNAG_LoadFusionRuleToLaTeX" );
 DeclareGlobalFunction( "QGNAG_LoadAllFusionRulesToLaTeX" );
+# ---------------------------------------------------------------#
+DeclareGlobalFunction( "QGNAG_PermutationFusionRules" );
+DeclareGlobalFunction( "QGNAG_TestPermutationFusionRules" );

@@ -130,3 +130,199 @@ InstallGlobalFunction( QGNAG_LoadAllFusionRulesToLaTeX, function(filename, data_
         AppendTo(out, "\\end{align*}\n\n");
     od;
 end);
+
+#--------------------------------------------------------------------------- #
+InstallGlobalFunction( QGNAG_PermutationFusionRules, function(
+    sigma, Simples, data_record )
+
+    local a, b, c,
+          theta,
+          a_sigma, b_sigma,
+          c_sigma,
+          vector_ab,
+          vector_sigma,
+          degree_a,
+          degree_b,
+          degree_c,
+          dimension_ab,
+          dimension_sigma,
+          dimension_from_decomposition,
+          failures;
+
+    failures := [];
+    theta := Length(Simples);
+
+    for a in [2..theta] do
+
+        for b in [a..theta] do
+
+            vector_ab :=
+                data_record.(String(a)).(String(b)).vector;
+
+            a_sigma := a^sigma;
+            b_sigma := b^sigma;
+
+            vector_sigma :=
+                data_record.(
+                    String(Minimum(a_sigma, b_sigma))
+                ).(
+                    String(Maximum(a_sigma, b_sigma))
+                ).vector;
+
+            #--------------------------------------------------
+            # Check dimensions
+            #--------------------------------------------------
+
+            degree_a :=
+                DegreeOfRepresentation(Simples[a].simple);
+
+            degree_b := DegreeOfRepresentation(Simples[b].simple);
+            dimension_ab := degree_a * degree_b;
+            dimension_from_decomposition := 0;
+
+            for c in [1..theta] do
+                degree_c                     := DegreeOfRepresentation(Simples[c].simple);
+                dimension_from_decomposition := dimension_from_decomposition + vector_ab[c] * degree_c;
+            od;
+
+            if dimension_ab <> dimension_from_decomposition then
+                Print(
+                    StringFormatted(
+                        "Dimension mismatch: a = {}, b = {}, {} <> {}\n",
+                        a,
+                        b,
+                        dimension_ab,
+                        dimension_from_decomposition
+                    )
+                );
+
+                Add(
+                    failures,
+                    rec(
+                        type := "dimension",
+                        a := a,
+                        b := b,
+                        dimension_tensor := dimension_ab,
+                        dimension_decomposition :=
+                            dimension_from_decomposition
+                    )
+                );
+
+                continue;
+
+            fi;
+
+            #--------------------------------------------------
+            # Check permutation of fusion rules
+            #--------------------------------------------------
+
+            for c in [1..theta] do
+
+                c_sigma := c^(sigma^-1);
+
+                if vector_sigma[c] <> vector_ab[c_sigma] then
+
+                    Print(
+                        StringFormatted(
+                            "Mismatch: a = {}, b = {}, c = {}, {} <> {}\n",
+                            a,
+                            b,
+                            c,
+                            vector_sigma[c],
+                            vector_ab[c_sigma]
+                        )
+                    );
+
+                    Add(
+                        failures,
+                        rec(
+                            type := "multiplicity",
+                            a := a,
+                            b := b,
+                            c := c,
+                            mult_sigma := vector_sigma[c],
+                            mult := vector_ab[c_sigma]
+                        )
+                    );
+
+                fi;
+
+            od;
+
+        od;
+
+    od;
+    return failures;
+end );
+
+InstallGlobalFunction( QGNAG_TestPermutationFusionRules, function( sigma, Simples, data_fusion )
+
+    local failures, failure;
+
+    failures := QGNAG_PermutationFusionRules( sigma, Simples, data_fusion );
+
+    if IsEmpty(failures) then
+
+        Print(
+            "\n",
+            "========================================\n",
+            "  Permutation fusion test: PASSED\n",
+            "========================================\n",
+            "The permutation preserves all fusion rules.\n",
+            "\n"
+        );
+        return true;
+    fi;
+
+    Print(
+        "\n",
+        "========================================\n",
+        "  Permutation fusion test: FAILED\n",
+        "========================================\n",
+        "Number of failures: ",
+        Length(failures),
+        "\n",
+        "\n"
+    );
+    for failure in failures do
+
+        if failure.type = "dimension" then
+
+            Print(
+                "Dimension mismatch:\n",
+                "  (a,b) = (",
+                failure.a,
+                ", ",
+                failure.b,
+                ")\n",
+                "  dim(M_a tensor M_b) = ",
+                failure.dimension_tensor,
+                "\n",
+                "  dimension from fusion rule = ",
+                failure.dimension_decomposition,
+                "\n",
+                "\n"
+            );
+
+        elif failure.type = "multiplicity" then
+            Print(
+                "Multiplicity mismatch:\n",
+                "  (a,b,c) = (",
+                failure.a,
+                ", ",
+                failure.b,
+                ", ",
+                failure.c,
+                ")\n",
+                "  N_c^{a^sigma,b^sigma} = ",
+                failure.mult_sigma,
+                "\n",
+                "  N_{c^sigma^-1}^{a,b} = ",
+                failure.mult,
+                "\n",
+                "\n"
+            );
+        fi;
+    od;
+    return false;
+end );
