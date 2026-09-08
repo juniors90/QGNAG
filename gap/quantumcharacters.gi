@@ -71,7 +71,7 @@ InstallGlobalFunction( QGNAG_FusionMultiplicity, function( index_i, index_s, ind
     N_is_k            := QGNAG_DimHomAModules( Mi_tensor_Ms_mats, Mk_mats);
     
     return N_is_k;
-end);
+end); # Migrated
 
 
 InstallGlobalFunction(QGNAG_GradedMultiplicity, function( index_i, index_j, rec_info_nichols )
@@ -89,7 +89,7 @@ InstallGlobalFunction(QGNAG_GradedMultiplicity, function( index_i, index_j, rec_
     od;
     
     return 0;
-end);
+end); # Migrated
 
 
 InstallGlobalFunction(QGNAG_GradedFusionMultiplicity, function( index_s, index_k, index_j, SimplesMn, rec_info_nichols )
@@ -100,12 +100,14 @@ InstallGlobalFunction(QGNAG_GradedFusionMultiplicity, function( index_s, index_k
 
     result := 0;
     for index_i in [1 .. Length(SimplesMn)] do
-        N_ik_s  := QGNAG_FusionMultiplicity( index_i, index_s, index_k, SimplesMn );
+        # Mi_tensor_Ms_mats, Mk_mats
+        N_ik_s  := QGNAG_FusionMultiplicity( index_i, index_s, index_k, SimplesMn ); 
         b_ij    := QGNAG_GradedMultiplicity( index_i, index_j, rec_info_nichols );
         result  := result + N_ik_s * b_ij;
     od;    
     return result;
-end);
+end); # Migrated
+
 
 
 InstallGlobalFunction(QGNAG_GradedFusionByDegree, function( s, SimplesMn, rec_info_nichols )
@@ -120,13 +122,13 @@ InstallGlobalFunction(QGNAG_GradedFusionByDegree, function( s, SimplesMn, rec_in
         Add(data, r);
     od;
     return data;
-end);
+end); # Migrated
 
 
-InstallGlobalFunction(QGNAG_GradedFusionVector, function( s, SimplesMn, rec_info )
+InstallGlobalFunction(QGNAG_GradedFusionVector, function( s, SimplesMn, rec_info_nichols )
     local data, epsilon, j, k, theta;
-    data    := QGNAG_GradedFusionByDegree( s, SimplesMn, rec_info );
-    theta   := Maximum( List( RecNames(rec_info), Int ) );
+    data    := QGNAG_GradedFusionByDegree( s, SimplesMn, rec_info_nichols );
+    theta   := Maximum( List( RecNames(rec_info_nichols), Int ) );
     epsilon := [];
     for j in [0 .. theta] do
         for k in [1 .. Length(SimplesMn)] do
@@ -134,7 +136,7 @@ InstallGlobalFunction(QGNAG_GradedFusionVector, function( s, SimplesMn, rec_info
         od;
     od;
     return epsilon;
-end);
+end); # Migrated
 
 
 InstallGlobalFunction(QGNAG_ExportGradedFusionByDegreeToLaTeX, function(filename, SimplesMn, rec_info_nichols)
@@ -170,199 +172,9 @@ InstallGlobalFunction(QGNAG_ExportGradedFusionByDegreeToLaTeX, function(filename
         AppendTo(out, "\\end{table}\n\n");
     od;
     CloseStream(out);
-end);
+end); # Migrated
 
 # -----------------------------------------------------------------------
-
-InstallGlobalFunction(QGNAG_AllCharToShiftedVectorsLeft, function( record_data_decomp )
-    local N,
-          degrees,
-          ell,
-          min_degree,
-          vector,
-          shifted_vectors,
-          j,
-          d,
-          index,
-          degree,
-          i;
-
-    N       := Length(record_data_decomp);
-    degrees := List(RecNames(record_data_decomp[1]), x -> Int(x));
-    Sort(degrees);
-    ell := Maximum(degrees);
-
-    # Find the smallest degree with a non-zero multiplicity.
-    min_degree := First( degrees, d -> ForAny( [1..N], i -> record_data_decomp[i].(String(d)) <> 0 ) );
-    shifted_vectors := [];
-    # Compute all possible left shifts.
-    for j in [0..min_degree] do
-        vector := [];
-        for d in [0..ell] do
-            index  := (d + j) mod (ell + 1);
-            degree := String(index);
-            for i in [1..N] do
-                Add(vector, record_data_decomp[i].(degree));
-            od;
-        od;
-        Add(shifted_vectors, vector);
-    od;
-    return shifted_vectors;
-end);
-
-InstallGlobalFunction(QGNAG_AllShiftedVectorsLeft, function( data_record_data_decomp )
-    local shifted_vectors,
-          record_data_decomp,
-          i;
-
-    shifted_vectors := [];
-    for i in [1..Length(data_record_data_decomp)] do
-        record_data_decomp := data_record_data_decomp[i];
-        Append( shifted_vectors, QGNAG_AllCharToShiftedVectorsLeft( record_data_decomp ) );
-    od;
-    return shifted_vectors;
-end);
-
-
-InstallGlobalFunction(QGNAG_CharToShiftedVectorLeft, function( record_data_decomp, j )
-    local degrees,
-          ell,
-          N,
-          vector,
-          d,
-          i,
-          index,
-          degree;
-
-    N       := Length(record_data_decomp);
-    degrees := List(RecNames(record_data_decomp[1]), x -> Int(x));
-    ell     := Maximum(degrees);
-    vector := [];
-    for d in [0..ell] do
-        index := ((d + j) mod (ell + 1));
-        degree := String(index);
-        for i in [1..N] do
-            Add(vector, record_data_decomp[i].(degree));
-        od;
-    od;
-    return vector;
-end);
-
-
-InstallGlobalFunction( QGNAG_NuVectorNames, function( data_record_data_decomp )
-    local names,
-          i,
-          number_of_shifts,
-          nu_ij,
-          j;
-
-    names := [];
-    for i in [1..Length(data_record_data_decomp)] do
-        nu_ij := QGNAG_AllCharToShiftedVectorsLeft( data_record_data_decomp[i] );
-        number_of_shifts := Length( nu_ij );
-        for j in [0..number_of_shifts-1] do
-            Add(names, Concatenation("\\nu_{", String(i),",", String(j), "}" ));
-        od;
-    od;
-    return names;
-end );
-
-InstallGlobalFunction( QGNAG_PrintQP, function( coeffs, names )
-    local terms,
-          i,
-          c,
-          s,
-          result;
-    
-    terms := [];
-    
-    for i in [1 .. Length(coeffs)] do
-        c := coeffs[i];
-        if c <> 0 then
-            if c = 1 then
-                s := names[i];
-            elif c = -1 then
-                s := Concatenation("-", names[i]);
-            else
-                s := Concatenation(String(c), " ", names[i]);
-            fi;
-            Add(terms, s);
-        fi;
-    od;
-    if Length(terms) = 0 then
-        result := "\\epsilon = 0";
-    else
-        result := "\\epsilon = ";
-        for i in [1 .. Length(terms)] do
-            if i = 1 then
-                result := Concatenation(result, terms[i]);
-            else
-                if terms[i][1] = '-' then
-                    result := Concatenation(result, " - ", terms[i]{[2 .. Length(terms[i])]});
-                else
-                    result := Concatenation(result, " + ", terms[i]);
-                fi;
-            fi;
-        od;
-    fi;
-    Print(result, "\n");
-    return result;
-end);
-
-
-InstallGlobalFunction( QGNAG_QPToLaTeX, function( coeffs, names, index )
-    local terms,
-          i,
-          c,
-          s,
-          result;
-
-    terms := [];
-
-    for i in [1..Length(coeffs)] do
-        c := coeffs[i];
-        if c <> 0 then
-            if c = 1 then
-                s := names[i];
-            elif c = -1 then
-                s := Concatenation("-", names[i]);
-            else
-                s := Concatenation(String(c), "\\,", names[i]);
-            fi;
-            Add(terms, s);
-        fi;
-    od;
-    if Length(terms) = 0 then
-        result := Concatenation("\\epsilon_", String(index), " = 0");
-    else
-        result := Concatenation("\\epsilon_", String(index), " = ");
-        for i in [1..Length(terms)] do
-            if i = 1 then
-                result := Concatenation(result, terms[i]);
-            else
-                if terms[i][1] = '-' then
-                    result := Concatenation( result, " - ", terms[i]{[2..Length(terms[i])]} );
-                else
-                    result := Concatenation( result, " + ", terms[i] );
-                fi;
-            fi;
-        od;
-    fi;
-    return result;
-end);
-
-InstallGlobalFunction( QGNAG_SaveQPToLaTeX, function(filename, coeffs, names, index)
-    local out,
-          result;
-
-    out    := OutputTextFile(filename, false);
-    result := QGNAG_QPToLaTeX(coeffs, names, index);
-    AppendTo(out, "\\[\n");
-    AppendTo(out, result);
-    AppendTo(out, "\n\\]\n");
-    CloseStream(out);
-end);
-
 
 InstallGlobalFunction( QGNAG_SaveAllQPToLaTeX, function(filename, data_record_data_decomp, SimplesMn, rec_info_nichols )
     local out,
@@ -373,9 +185,9 @@ InstallGlobalFunction( QGNAG_SaveAllQPToLaTeX, function(filename, data_record_da
           epsilon,
           coefficients,
           result;
-    out := OutputTextFile(filename, false);
-    nu  := QGNAG_AllShiftedVectorsLeft( data_record_data_decomp);
-    A   := TransposedMat(nu);
+    out           := OutputTextFile(filename, false);
+    nu            := QGNAG_AllShiftedVectorsLeft( data_record_data_decomp);
+    A             :=  TransposedMat(nu);
     NuVectorNames := QGNAG_NuVectorNames(data_record_data_decomp);
     for index in [1..Length(data_record_data_decomp)] do
         epsilon := QGNAG_GradedFusionVector( index, SimplesMn, rec_info_nichols );
@@ -389,6 +201,7 @@ InstallGlobalFunction( QGNAG_SaveAllQPToLaTeX, function(filename, data_record_da
     od;
     CloseStream(out);
 end);
+
 
 # -----------------------------------------------------------------------
 
@@ -527,6 +340,7 @@ InstallGlobalFunction( QGNAG_SaveAllTPolynomialsToLaTeX, function( filename, dat
         position,
         index,
         simpleName,
+        shiftData,
         closebrace;
 
     out := OutputTextFile(filename, false);
@@ -537,7 +351,11 @@ InstallGlobalFunction( QGNAG_SaveAllTPolynomialsToLaTeX, function( filename, dat
     nu := QGNAG_AllShiftedVectorsLeft(data_record_data_decomp);
     A := TransposedMat(nu);
     NuVectorNames := QGNAG_NuVectorNames(data_record_data_decomp);
-    shiftCounts   := List(data_record_data_decomp, Length);
+    shiftData  := []; 
+    for p in [1..numSimples] do     # Number of admissible shifts for each p.
+        shiftData[p] := QGNAG_AllShiftedVectorsLeft( [ data_record_data_decomp[p] ] );
+    od;
+    shiftCounts := List( shiftData, Length );
     numShifts     := Length(nu);
     Print("Length(nu) = ", numShifts, "\n"); # Number of shifts for each simple.
     Print("Shift counts = ", shiftCounts, "\n");
@@ -1007,207 +825,3 @@ InstallGlobalFunction( QGNAG_AllTPolynomialsToRecord, function( data_record_data
 end );
 
 # ---------------------------------------------------------------------------------
-
-InstallGlobalFunction( QGNAG_ClassifySimplesIntoBlocks, function( data_pols_decomp )
-    local numSimples,
-          remaining,
-          blocks,
-          j,
-          p,
-          block,
-          newElements,
-          polynomial,
-          value;
-
-        numSimples := Length(data_pols_decomp); # Number of simples
-        remaining  := [1..numSimples];          # Initially every simple is unclassified.
-        blocks     := rec();
-        # ============================================================
-        # Construct the blocks.
-        #
-        # For the smallest unclassified j:
-        #
-        #     B_j = { p : t_{j,p}(1) <> 0 }.
-        #
-        # Then continue until every simple is classified.
-        # ============================================================
-        while Length(remaining) > 0 do
-            # --------------------------------------------------------
-            # Smallest unclassified simple.
-            # --------------------------------------------------------
-            j := remaining[1];
-            block := [];
-            # --------------------------------------------------------
-            # Compute
-            #
-            #     t_{j,p}(1)
-            #
-            # by summing the coefficient vector of t_{j,p}.
-            # --------------------------------------------------------
-            for p in remaining do
-                polynomial := data_pols_decomp[j].(String(p));
-                value      := Sum(polynomial);
-                if value <> 0 then
-                    Add(block, p);
-                fi;
-            od;
-            blocks.(String(j)) := block;
-            for p in block do # Remove all simples belonging to this block.
-                RemoveSet(remaining, p);
-            od;
-
-        od;
-        return blocks;
-end);
-
-InstallGlobalFunction( QGNAG_ClassifySimplesIntoBlocksContiguous,
-    function( data_pols_decomp )
-        local
-            numSimples,
-            unclassified,
-            blocks,
-            j,
-            p,
-            block,
-            polynomial,
-            blockIndex;
-
-        numSimples := Length(data_pols_decomp);
-
-        unclassified := [1..numSimples];
-
-        blocks := rec();
-
-        blockIndex := 1;
-
-        while Length(unclassified) > 0 do
-
-            # --------------------------------------------------------
-            # Smallest unclassified simple.
-            # --------------------------------------------------------
-            j := unclassified[1];
-
-            block := [];
-
-            # --------------------------------------------------------
-            # B_j = { p : t_{j,p}(1) <> 0 }.
-            # --------------------------------------------------------
-            for p in [1..numSimples] do
-
-                polynomial :=
-                    data_pols_decomp[j].(String(p));
-
-                if Sum(polynomial) <> 0 then
-                    Add(block, p);
-                fi;
-
-            od;
-
-            # --------------------------------------------------------
-            # Keep only unclassified simples.
-            # --------------------------------------------------------
-            block := Intersection(
-                block,
-                unclassified
-            );
-
-            # --------------------------------------------------------
-            # Store with consecutive block index.
-            # --------------------------------------------------------
-            blocks.(String(blockIndex)) := block;
-
-            # --------------------------------------------------------
-            # Mark as classified.
-            # --------------------------------------------------------
-            for p in block do
-                RemoveSet(unclassified, p);
-            od;
-
-            blockIndex := blockIndex + 1;
-
-        od;
-
-        return blocks;
-    end);
-
-
-InstallGlobalFunction( QGNAG_SaveBlockClassificationToLaTeX, function( filename, block_classification, SimpleNames )
-    local out,
-          blockNames,
-          block,
-          blockIndex,
-          p,
-          first;
-
-    out := OutputTextFile(filename, false);
-    
-    AppendTo( out, "\\subsection{Separation into blocks}\n\n" );
-    AppendTo( out, "Evaluate at $\\boldsymbol{q}=1$ to obtain the " );
-    AppendTo( out, "ordinary multiplicities\n" );
-    AppendTo( out, "\\[\n" );
-    AppendTo( out, "t_{j,p}(1)");
-    AppendTo( out, " = \\sum_{d=0}^{N_p} f_{p,d}^{j}.\n" );
-    AppendTo( out, "\\]\n\n" );
-    AppendTo( out, "The simple modules are partitioned into blocks according " );
-    AppendTo( out, "to the non-vanishing of these ordinary multiplicities. " );
-    AppendTo( out, "Starting with the smallest unclassified index $j$, we " );
-    AppendTo( out, "define\n\n" );
-    AppendTo( out, "\\[\n" );
-    AppendTo( out, "B_j = \\{p : t_{j,p}(1) \\neq 0\\}.\n" );
-    AppendTo( out, "\\]\n\n" );
-    AppendTo( out, "The procedure is continued until every simple module " );
-    AppendTo( out, "belongs to exactly one block.\n\n" );
-    AppendTo( out, "\\begin{table}[ht]\n");
-    AppendTo( out, "\\centering\n" );
-    AppendTo( out, "\\begin{tabular}{c|c|l}\n" );
-    AppendTo( out, "\\text{Block} & " );
-    AppendTo( out, "\\text{Indices} & " );
-    AppendTo( out, "\\text{Simple }D(G)\\text{-modules} " );
-    AppendTo( out, "\\\\\\hline\n" );
-    # ============================================================
-    # Blocks
-    # ============================================================
-    blockNames := List(RecNames(block_classification), Int);
-    Sort(blockNames);
-    for blockIndex in [1..Length(blockNames)] do
-        block := block_classification.( blockNames[blockIndex] );
-        # --------------------------------------------------------
-        # Block name
-        # --------------------------------------------------------
-        AppendTo( out, "$B_{", String(blockIndex), "}$ & " );
-        # --------------------------------------------------------
-        # Indices
-        # --------------------------------------------------------
-        AppendTo(out, "$\\{");
-        first := true;
-        for p in block do
-            if not first then
-                AppendTo(out, ",\\ ");
-            fi;
-            AppendTo( out, String(p) );
-            first := false;
-        od;
-        AppendTo(out, "\\}$ & ");
-        # --------------------------------------------------------
-        # Simple names
-        # --------------------------------------------------------
-        first := true;
-        for p in block do
-            if not first then
-                AppendTo(out, ",\\ ");
-            fi;
-            AppendTo( out, "$", SimpleNames[p], "$");
-            first := false;
-        od;
-        AppendTo( out, " \\\\\n" );
-    od;
-    # ============================================================
-    # Finish table
-    # ============================================================
-    AppendTo( out, "\\end{tabular}\n" );
-    AppendTo( out, "\\caption{Block decomposition of the simple " );
-    AppendTo( out, "$D(G)$-modules.}\n" );
-    AppendTo( out, "\\label{tab:block-decomposition}\n" );
-    AppendTo( out, "\\end{table}\n\n" );
-    CloseStream(out);
-end);

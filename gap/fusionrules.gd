@@ -6,3 +6,8 @@ DeclareGlobalFunction( "QGNAG_FusionRuleToLaTeX" );
 DeclareGlobalFunction( "QGNAG_FusionRuleToLaTeXForExport" );
 DeclareGlobalFunction( "QGNAG_FusionRuleToIndex" );
 DeclareGlobalFunction( "QGNAG_FusionRuleToIndexTex" );
+DeclareGlobalFunction( "QGNAG_WriteFusionRuleToLaTeX" );
+DeclareGlobalFunction( "QGNAG_WriteFusionRuleToLaTeXWithIndex" );
+DeclareGlobalFunction( "QGNAG_ExportFusionRulesToLaTeXSingleLong" );
+DeclareGlobalFunction( "QGNAG_AllTensorProductRepresentationMatrices" );
+DeclareGlobalFunction( "QGNAG_FusionRulesAsVectors" );

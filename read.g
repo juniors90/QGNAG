@@ -30,3 +30,6 @@ ReadPackage( "QGNAG", "gap/visualization.gi" );
 ReadPackage( "QGNAG", "gap/fusionrules.gi" );
 ReadPackage( "QGNAG", "gap/quantumcharacters.gi" );
 ReadPackage( "QGNAG", "gap/braided.gi" );
+ReadPackage( "QGNAG", "gap/block_classification.gi");
+ReadPackage( "QGNAG", "gap/neg_notation.gi" );
+ReadPackage( "QGNAG", "gap/graph.gi");

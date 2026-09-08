@@ -8,7 +8,6 @@
 if not IsBound( QGNAG ) then
     BindGlobal( "QGNAG", rec() );
 fi;
-
 # Creamos el sub-registro de configuración con sus valores por defecto
 QGNAG.Config := rec(
     m       := 2,     # Valor por defecto para m
@@ -16,7 +15,6 @@ QGNAG.Config := rec(
     DEFAULT := true,
     verbose := false  # Otro ejemplo de configuración
 );
-
 DeclareGlobalFunction( "QGNAGSetModulus" );
-
 DeclareGlobalFunction( "QGNAGSetConfig" );
+DeclareGlobalFunction( "QGNAG_ExtractTuple" );
