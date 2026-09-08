@@ -73,8 +73,8 @@ end);
 
 
 InstallGlobalFunction( QGNAG_DecomposeDGRepresentation, function(rep, simples)
-    local result, remaining, s, rho, degree_s, mats_rep, mats_s, mult_s;
-    result    := [];
+    local decomposition, remaining, s, rho, degree_s, mats_rep, mats_s, mult_s;
+    decomposition    := [];
     remaining := DegreeOfRepresentation(rep.rho);
     mats_rep  := QGNAG_RepresentationMatrices(rep); # tomo las matrices
     for s in simples do
@@ -88,14 +88,14 @@ InstallGlobalFunction( QGNAG_DecomposeDGRepresentation, function(rep, simples)
         mult_s := QGNAG_DimHomAModules(mats_rep, mats_s);
         #Print("\n----------------: ", degree_s);
         if mult_s > 0 then
-            Add(result, [ mult_s, s ]);
+            Add(decomposition, [ mult_s, s ]);
             remaining := remaining - mult_s * degree_s;
             if remaining = 0 then
                 break;
             fi;
         fi;
     od;
-    return result;
+    return decomposition;
 end);
 
 
@@ -302,6 +302,95 @@ InstallGlobalFunction( QGNAG_ExportFusionRulesToLaTeXSingleLong, function(filena
         AppendTo(out, "\\end{align*}\n\n");
     od;
     CloseStream(out);
+end);
+
+
+InstallGlobalFunction( QGNAG_AllTensorProductRepresentationMatrices, function( simples )
+    local all_mats_tensor,
+          i,
+          j,
+          tensor,
+          rec_mat;
+
+    all_mats_tensor := [];
+    for i in [2..Length(simples)] do
+        for j in [i..Length(simples)] do
+            tensor := QGNAG_TensorProductOfSimples( simples[i], simples[j]);
+            rec_mat  := rec(
+                tensor := QGNAG_RepresentationMatrices(tensor),
+                first  := i,
+                second := j
+            );
+            Add(all_mats_tensor, rec_mat);
+        od;
+    od;
+    return all_mats_tensor;
+end);
+
+
+InstallGlobalFunction( QGNAG_FusionRulesAsVectors, function(all_mats_tensor, data_mats_simples)
+    local theta, data_fusion_rules, i, j, tensor, decomposition,
+          remaining, mats_s, degree_s, mult_s, vector, term, k;
+
+    theta := Length(data_mats_simples);
+    data_fusion_rules := [];
+
+    for i in [2..theta] do
+        for j in [i..theta] do
+
+            tensor := First(
+                all_mats_tensor,
+                r -> r.first = i and r.second = j
+            ).tensor;
+
+            decomposition := [];
+            remaining := Length(tensor[1]);
+
+            for mats_s in data_mats_simples do
+
+                degree_s := Length(mats_s[1]);
+
+                if degree_s > remaining then
+                    continue;
+                fi;
+
+                mult_s := QGNAG_DimHomAModules(tensor, mats_s);
+
+                if mult_s > 0 then
+                    Add(
+                        decomposition,
+                        [mult_s, Position(data_mats_simples, mats_s)]
+                    );
+
+                    remaining := remaining - mult_s * degree_s;
+
+                    if remaining = 0 then
+                        break;
+                    fi;
+                fi;
+
+            od;
+
+            vector := List([1..theta], k -> 0);
+
+            for term in decomposition do
+                k := term[2];
+                vector[k] := term[1];
+            od;
+
+            Add(
+                data_fusion_rules,
+                rec(
+                    first := i,
+                    second := j,
+                    vector := vector
+                )
+            );
+
+        od;
+    od;
+
+    return data_fusion_rules;
 end);
 
 

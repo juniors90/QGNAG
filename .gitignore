@@ -23,3 +23,16 @@ doc/title.xml
 coverage
 *.log
 merge_coverage.sh
+
+/bin/
+/gen/
+Makefile
+
+/tmp/
+/gh-pages/
+vars.txt
+.vscode
+examples/TETRAHEDRON/KL/*.tex
+examples/FK3/KL/*.tex
+examples/FK3/KAZHDANLUSZTIG/*.tex
+examples/TETRAHEDRON/KL/ORDERED/*.tex

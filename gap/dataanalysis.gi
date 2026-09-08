@@ -565,11 +565,21 @@ end);
 
 
 InstallGlobalFunction(QGNAG_CharacterSummaryLaTeX, function(rec_info, SimplesMn, SimpleNames)
-    local degrees, d, pair, mult, idx, first, charstr, term;
+    local degrees,
+          d,
+          pair,
+          mult,
+          idx,
+          first,
+          charstr,
+          term,
+          sNamesL;
     degrees := List(RecNames(rec_info), Int);
     Sort(degrees);
-    charstr := "\\operatorname{Char}(t) = ";
-    first := true;
+    sNamesL := List( SimpleNames, QGNAG_ExtractTuple);
+    pair    := rec_info.(Last(degrees));
+    charstr := StringFormatted("\\operatorname{{Char}}{}", sNamesL[pair[1][2]]);
+    first   := true;
     for d in degrees do
         for pair in rec_info.(d) do
             mult := pair[1];
@@ -580,7 +590,7 @@ InstallGlobalFunction(QGNAG_CharacterSummaryLaTeX, function(rec_info, SimplesMn,
                 term := Concatenation( String(mult), "\\,", SimpleNames[idx], "[", String(d), "]" );
             fi;
             if first then
-                charstr := Concatenation(charstr, term);
+                charstr := StringFormatted("{} = {}", charstr, term);
                 first := false;
             else
                 charstr := Concatenation(charstr, " + ", term);
@@ -684,16 +694,115 @@ InstallGlobalFunction(QGNAG_LoadHilbertPolynomialsToLaTeX, function(filename, ve
     CloseStream(out);
 end);
 
-InstallGlobalFunction(QGNAG_LoadCharactersToLaTeX, function(filename, data_rec_info, SimpleNames)
-    local out, i, rec_info, degrees, d, pair, mult, idx, first, term, LName;
+
+InstallGlobalFunction( QGNAG_MultiplicitiesToDecomposition, function( bijs_by_degree )
+    local rec_decomp,
+          degree,
+          bijs,
+          nonzero_positions,
+          decomposition,
+          i;
+
+    rec_decomp := rec();;
+    for degree in RecNames( bijs_by_degree ) do
+        bijs              := bijs_by_degree.(degree);;
+        nonzero_positions := Filtered([1 .. Length(bijs)],i -> bijs[i] <> 0);;
+        decomposition     := List(nonzero_positions,i -> [ bijs[i], i ]);;
+        if Length(decomposition) > 0 then
+            rec_decomp.(degree) := decomposition;;
+        fi;
+    od;
+    return rec_decomp;
+end);;
+
+
+InstallGlobalFunction( QGNAG_PermutationVarChars, function(data_record_data_decomp)
+    local check, 
+          index_var_chars,
+          bijs_by_degree,
+          data_rec_info_neg, 
+          IndexVarChars,
+          tau;
+          
+    bijs_by_degree    := List(data_record_data_decomp, QGNAG_GetShiftedBijs);;
+    data_rec_info_neg := List( bijs_by_degree, QGNAG_MultiplicitiesToDecomposition );;
+    check             := ForAll(data_rec_info_neg, r -> Maximum(List(RecNames(r), Int)) = 0);;
+    if not check then
+        Error("Invalid degree: maximum degree is not 0");
+    fi;
+    IndexVarChars := function(rec_info)
+        local degrees, max_degree, pair;    
+        degrees         := List(RecNames(rec_info), Int);
+        max_degree      := Maximum( degrees );
+        pair            := rec_info.(max_degree);
+        return pair[1][2];
+    end;
+    index_var_chars := List(data_rec_info_neg, IndexVarChars);
+    tau             := PermList( index_var_chars );
+    return tau;
+end);
+
+
+# InstallGlobalFunction(QGNAG_LoadCharactersToLaTeX, function(filename, data_rec_info, SimpleNames)
+#    local out, 
+#          i, 
+#          rec_info, 
+#          degrees, 
+#          d, 
+#          pair, 
+#          mult, 
+#          idx, 
+#          first, 
+#          term,
+#          tau, 
+#          sNamesL;
+    
+#    out     := OutputTextFile(filename, false);
+#    sNamesL := List( SimpleNames, QGNAG_ExtractTuple);
+#    tau     := QGNAG_PermutationVarChars(data_rec_info);
+#    for i in [1..Length(data_rec_info)] do
+    
+#        rec_info := data_rec_info[i^tau];
+#        degrees  := List(RecNames(rec_info), Int); # Obtener e,rho a partir de M(e,rho)
+#        Sort(degrees);
+#        pair     := rec_info.(Last(degrees));
+#        AppendTo(out, "\\subsubsection{$L", sNamesL[pair[1][2]], "$}\n");
+#        AppendTo(out, "\\[\n");
+#        AppendTo(out, "\\operatorname{Char}", sNamesL[pair[1][2]], " =");
+#        first := true;
+    
+#        for d in degrees do
+#            for pair in rec_info.(d) do
+#                mult := pair[1];
+#                idx  := pair[2];
+#                if mult = 1 then
+#                    term := StringFormatted("{}[{}]", SimpleNames[idx], d);
+#                else
+#                    term := StringFormatted("{}\\,{}[{}]", mult, SimpleNames[idx], d);
+#                fi;
+#                if first then
+#                    AppendTo(out, term);
+#                    first := false;
+#                else
+#                    AppendTo(out, " + ", term);
+#                fi;
+#            od;
+#        od;
+#        AppendTo(out, "\n\\]\n\n");
+#    od;
+#    CloseStream(out);
+# end);
+
+
+InstallGlobalFunction(QGNAG_LoadCharactersToLaTeXByIndex, function(filename, data_rec_info)
+    local out, i, rec_info, degrees, d, pair, mult, idx, first, term;
     out := OutputTextFile(filename, false);
     for i in [1..Length(data_rec_info)] do
         rec_info := data_rec_info[i];
         # Obtener e,rho a partir de M(e,rho)
-        LName := SimpleNames[i]{[3..Length(SimpleNames[i])-1]};
-        AppendTo(out, "\\subsubsection{$L(", LName, ")$}\n");
+        AppendTo(out, "\\subsubsection{$L_{", String(i), "}$}\n");
         AppendTo(out, "\\[\n");
-        AppendTo(out, "\\operatorname{Char}(", LName, ")=");
+        AppendTo(out, "\\operatorname{Char}_{", String(i), "} = ");
         degrees := List(RecNames(rec_info), Int);
         Sort(degrees);
         first := true;
@@ -702,11 +811,9 @@ InstallGlobalFunction(QGNAG_LoadCharactersToLaTeX, function(filename, data_rec_i
                 mult := pair[1];
                 idx  := pair[2];
                 if mult = 1 then
-                    term := StringFormatted("{}[{}]",
-                        SimpleNames[idx], d);
+                    term := StringFormatted("M_{{{}}}[{}]", String(idx), d);
                 else
-                    term := StringFormatted("{}\\,{}[{}]",
-                        mult, SimpleNames[idx], d);
+                    term := StringFormatted("{}\\,M_{{{}}}[{}]", mult, String(idx), d);
                 fi;
                 if first then
                     AppendTo(out, term);
@@ -719,4 +826,157 @@ InstallGlobalFunction(QGNAG_LoadCharactersToLaTeX, function(filename, data_rec_i
         AppendTo(out, "\n\\]\n\n");
     od;
     CloseStream(out);
+end);
+
+InstallGlobalFunction(QGNAG_LoadCharactersToLaTeX, function(filename, data_rec_info, SimpleNames)
+    local out,
+          i,
+          rec_info,
+          degrees,
+          d,
+          pair,
+          mult,
+          idx,
+          first,
+          term,
+          theta,
+          sNamesL,
+          LName;
+
+    sNamesL := List( SimpleNames, QGNAG_ExtractTuple );
+    out     := OutputTextFile( filename, false );
+    theta   := Length(data_rec_info);
+
+    for i in [1..theta] do
+        rec_info := data_rec_info[i];
+        LName    := sNamesL[i];
+        AppendTo(out, "\\subsubsection{$L", LName, "$}\n");
+        AppendTo(out, "\\[\n");
+        AppendTo(out, "\\operatorname{Char}", LName, " = ");
+        degrees := List(RecNames(rec_info), Int);
+        Sort(degrees);
+        first := true;
+        for d in degrees do
+            for pair in rec_info.(String(d)) do
+                mult := pair[1];
+                idx  := pair[2];
+                if mult = 1 then
+                    term := StringFormatted("{}[{}]", SimpleNames[idx], d);
+                else
+                    term := StringFormatted("{}\\,{}[{}]", mult, SimpleNames[idx], d);
+                fi;
+                if first then
+                    AppendTo(out, term);
+                    first := false;
+                else
+                    AppendTo(out, " + ", term);
+                fi;
+            od;
+        od;
+        AppendTo(out, "\n\\]\n\n");
+    od;
+    CloseStream(out);
+end);
+
+
+InstallGlobalFunction(QGNAG_ShiftRecordKeys, function( rec_info, sign )
+    local recordNames,
+          numericKeys,
+          baseKey,
+          recordName,
+          newKey,
+          shiftedValue,
+          shiftedRecord;
+
+    # Collect the record's keys and convert them to integers to find the base.
+    recordNames := RecNames( rec_info );
+    numericKeys := List( recordNames, Int );
+    baseKey     := Minimum( numericKeys );
+
+    shiftedRecord := rec();
+    for recordName in recordNames do
+        shiftedValue := rec_info.(recordName);
+        newKey       := sign * ( Int(recordName) - baseKey );
+        shiftedRecord.(String(newKey)) := shiftedValue;
+    od;
+
+    return shiftedRecord;
+end);
+
+InstallGlobalFunction( QGNAG_NegateRecordKeys, function( rec_info )
+    local rec_info_new,
+          rec_info_names,
+          keys,
+          ell,
+          k;
+
+    rec_info_new   := rec();
+    rec_info_names := List( RecNames( rec_info ), Int );
+    ell            := Maximum( rec_info_names );
+    for k in [0 .. ell] do
+        rec_info_new.( String(-k) ) := rec_info.(String(k));
+    od;
+    return rec_info_new;
+end);
+
+
+InstallGlobalFunction( QGNAG_ShiftRecordKeysToZero, function( rec_info )
+    local rec_info_names,
+          rec_info_name,
+          topKey,
+          newKey,
+          rec_info_shifted;
+    
+    rec_info_shifted := rec();
+    rec_info_names   := List( RecNames( rec_info ), Int );
+    topKey           := Maximum( rec_info_names );  # anchor the largest key at 0
+    for rec_info_name in rec_info_names do
+        newKey                      := rec_info_name - topKey;
+        rec_info_shifted.( newKey ) := rec_info.(rec_info_name);
+    od;
+    return rec_info_shifted;
+end);
+
+
+InstallGlobalFunction( QGNAG_ShiftRecordKeysDecomp, function( rec_info, sign )
+    local recordNames,
+          numericKeys,
+          baseKey,
+          recordName,
+          newKey,
+          shiftedValue,
+          shiftedRecord;
+
+    recordNames := RecNames( rec_info );
+    numericKeys := List( recordNames, Int );
+
+    # El ancla (lo que pasa a valer 0) depende de la dirección:
+    #  - sign = 1  -> ancla en el mínimo (rango queda 0..ell)
+    #  - sign = -1 -> ancla en el máximo (rango queda -ell..0, orden preservado)
+    if sign = -1 then
+        baseKey := Maximum( numericKeys );
+    else
+        baseKey := Minimum( numericKeys );
+    fi;
+
+    shiftedRecord := rec();
+    for recordName in recordNames do
+        shiftedValue := rec_info.(recordName);
+        newKey       := Int(recordName) - baseKey;
+        shiftedRecord.(String(newKey)) := shiftedValue;
+    od;
+
+    return shiftedRecord;
+end);
+
+InstallGlobalFunction( QGNAG_ShiftDecompositionKeys, function( data_record_data_decomp, sign )
+    local shiftedData, s, shifted, r;
+
+    shiftedData := [];
+    for s in data_record_data_decomp do
+        shifted := List( s, r -> QGNAG_ShiftRecordKeysDecomp( r, sign ) );
+        Add( shiftedData, shifted );
+    od;
+
+    return shiftedData;
 end);

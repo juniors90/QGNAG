@@ -9,13 +9,6 @@ DeclareGlobalFunction( "QGNAG_GradedFusionByDegree" );
 DeclareGlobalFunction( "QGNAG_GradedFusionVector" );
 DeclareGlobalFunction( "QGNAG_ExportGradedFusionByDegreeToLaTeX" );
 # ----------------------------------------------------------------- #
-DeclareGlobalFunction( "QGNAG_AllCharToShiftedVectorsLeft" );
-DeclareGlobalFunction( "QGNAG_AllShiftedVectorsLeft" );
-DeclareGlobalFunction( "QGNAG_CharToShiftedVectorLeft" );
-DeclareGlobalFunction( "QGNAG_NuVectorNames" );
-DeclareGlobalFunction( "QGNAG_PrintQP" );
-DeclareGlobalFunction( "QGNAG_QPToLaTeX" );
-DeclareGlobalFunction( "QGNAG_SaveQPToLaTeX" );
 DeclareGlobalFunction( "QGNAG_SaveAllQPToLaTeX" );
 # ----------------------------------------------------------------- #
 DeclareGlobalFunction( "QGNAG_VectorToLaTeX" );
@@ -25,7 +18,3 @@ DeclareGlobalFunction( "QGNAG_SaveAllTPolynomialsToLaTeX" );
 DeclareGlobalFunction( "QGNAG_SaveBasisNuToLaTeX" );
 # ----------------------------------------------------------------- #
 DeclareGlobalFunction( "QGNAG_AllTPolynomialsToRecord" );
-# ----------------------------------------------------------------- #
-DeclareGlobalFunction( "QGNAG_ClassifySimplesIntoBlocks" );
-DeclareGlobalFunction( "QGNAG_ClassifySimplesIntoBlocksContiguous" );
-DeclareGlobalFunction( "QGNAG_SaveBlockClassificationToLaTeX" );

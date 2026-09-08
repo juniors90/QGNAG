@@ -11,43 +11,23 @@ InstallGlobalFunction(QGNAG_PermutationFromRecInfo, function( data_rec_info )
           perm_list;
 
     perm_list := [1..Length(data_rec_info)];
-
     for i in [1..Length(data_rec_info)] do
-
-        rec_info := data_rec_info[i];
-
-        degrees := List(RecNames(rec_info), Int);
-
-        top_degree := Maximum(degrees);
+        rec_info      := data_rec_info[i];
+        degrees       := List(RecNames(rec_info), Int);
+        top_degree    := Maximum(degrees);
         bottom_degree := Minimum(degrees);
-
-        # Unique module in the top degree.
-        top_modules := rec_info.(String(top_degree));
-
+        top_modules := rec_info.(String(top_degree)); # Unique module in the top degree.
         if Length(top_modules) <> 1 then
-            Error(
-                "Top degree of data_rec_info[", i,
-                "] does not contain a unique module"
-            );
+            Error("Top degree of data_rec_info[", i, "] does not contain a unique module");
         fi;
-
         top_module := top_modules[1][2];
-
-        # Module in the bottom degree.
-        bottom_modules := rec_info.(String(bottom_degree));
-
+        bottom_modules := rec_info.(String(bottom_degree)); # Module in the bottom degree.
         if Length(bottom_modules) <> 1 then
-            Error(
-                "Bottom degree of data_rec_info[", i,
-                "] does not contain a unique module"
-            );
+            Error("Bottom degree of data_rec_info[", i, "] does not contain a unique module");
         fi;
-
         bottom_module := bottom_modules[1][2];
-
         perm_list[top_module] := bottom_module;
     od;
-
     return PermList(perm_list);
 end);
 

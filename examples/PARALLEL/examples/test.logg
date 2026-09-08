@@ -1,0 +1,87 @@
+gap> LoadPackage("SCSCP");
+──────────────────────────────────────────────────────────────────────────────────────────────────────────
+Loading OpenMath 11.5.3 (OpenMath functionality in GAP)
+by Marco Costantini,
+   Olexandr Konovalov (https://olexandr-konovalov.github.io/),
+   Max Nicosia (http://www-edc.eng.cam.ac.uk/~lmn27/), and
+   Andrew Solomon.
+maintained by:
+   Olexandr Konovalov (https://olexandr-konovalov.github.io/) and
+   Max Nicosia (http://www-edc.eng.cam.ac.uk/~lmn27/).
+Homepage: https://gap-packages.github.io/openmath
+Report issues at https://github.com/gap-packages/openmath/issues
+──────────────────────────────────────────────────────────────────────────────────────────────────────────
+──────────────────────────────────────────────────────────────────────────────────────────────────────────
+Loading SCSCP 2.4.2 (Symbolic Computation Software Composability Protocol)
+by Olexandr Konovalov (https://olexandr-konovalov.github.io/) and
+   Steve Linton (http://www.cs.st-and.ac.uk/~sal/).
+maintained by:
+   Olexandr Konovalov (https://olexandr-konovalov.github.io/),
+   Steve Linton (http://www.cs.st-and.ac.uk/~sal/), and
+   The GAP Team (support@gap-system.org).
+Homepage: https://gap-packages.github.io/scscp
+Report issues at https://github.com/gap-packages/scscp/issues
+──────────────────────────────────────────────────────────────────────────────────────────────────────────
+true
+gap> LoadPackage("gapcxx");
+──────────────────────────────────────────────────────────────────────────────────────────────────────────
+Loading gapcxx 0.1 (A C++ kernel extension providing secure, bidirectional memory converters between GAP objects and native C++ data structures.)
+by Juan David Ferreira (https://gitlab.com/juniors90/).
+Homepage: https://juniors90.github.io/gapcxx/
+Report issues at https://github.com/juniors90/gapcxx/issues
+──────────────────────────────────────────────────────────────────────────────────────────────────────────
+true
+gap> allT               := List(CXX_data_tensor_int, r -> r.1_tensor_2);;
+gap> allS               := List( CXX_mat_s_int, r -> r.(Position(CXX_mat_s, r)) );;
+gap> t0 := NanosecondsSinceEpoch();;
+gap> parallel_results   := TestDimHomAllIntegerParallel(allT, allS);;
+gap> # ================================
+gap> #   Fin del código principal
+gap> # ================================
+gap> t1 := NanosecondsSinceEpoch();;
+gap> # Calcular duración en segundos
+gap> dur := (t1 - t0) / 1000000000.0;;
+gap> # Convertir a horas, minutos y segundos
+gap> horas := Int(dur / 3600);;
+gap> minutos := Int((dur - horas * 3600) / 60);;
+gap> segundos := Round(dur - horas * 3600 - minutos * 60);;
+gap> # Mostrar resultado
+gap> Print("\n=====================================\n");
+
+=====================================
+gap> Print("Tiempo total de ejecución:\n");
+Tiempo total de ejecución:
+gap> Print(String(horas), " horas, ", String(minutos), " minutos, ", String(segundos), " segundos.\n");
+0 horas, 0 minutos, 8. segundos.
+gap> Print("=====================================\n");
+=====================================
+gap> sequential_results := [];;
+gap> t2 := NanosecondsSinceEpoch();;
+gap> for t in allT do
+>     for s in allS do
+>         Add( sequential_results, CXX_DimHomAModules(t, s) );
+>     od;
+> od;
+gap> # ================================
+gap> #   Fin del código principal
+gap> # ================================
+gap> t3 := NanosecondsSinceEpoch();;
+gap> # Calcular duración en segundos
+gap> dur := (t3 - t2) / 1000000000.0;;
+gap> # Convertir a horas, minutos y segundos
+gap> horas := Int(dur / 3600);;
+gap> minutos := Int((dur - horas * 3600) / 60);;
+gap> segundos := Round(dur - horas * 3600 - minutos * 60);;
+gap> # Mostrar resultado
+gap> Print("\n=====================================\n");
+
+=====================================
+gap> Print("Tiempo total de ejecución:\n");
+Tiempo total de ejecución:
+gap> Print(String(horas), " horas, ", String(minutos), " minutos, ", String(segundos), " segundos.\n");
+0 horas, 0 minutos, 34. segundos.
+gap> Print("=====================================\n");
+=====================================
+gap> parallel_results = sequential_results;
+true
+gap> quit;

@@ -3,6 +3,11 @@
 #
 # Reading the declaration part of the package.
 #
+_PATH_SO:=Filename(DirectoriesPackagePrograms("qgnag"), "qgnag.so");
+if _PATH_SO <> fail then
+    LoadDynamicModule(_PATH_SO);
+fi;
+Unbind(_PATH_SO);
 ReadPackage( "QGNAG", "gap/QGNAG.gd" );
 ReadPackage( "QGNAG", "gap/semidirectproduct.gd" );
 ReadPackage( "QGNAG", "gap/fqelement.gd" );
@@ -31,3 +36,5 @@ ReadPackage( "QGNAG", "gap/fusionrules.gd" );
 ReadPackage( "QGNAG", "gap/quantumcharacters.gd" );
 ReadPackage( "QGNAG", "gap/braided.gd" );
 ReadPackage( "QGNAG", "gap/block_classification.gd");
+ReadPackage( "QGNAG", "gap/neg_notation.gd" );
+ReadPackage( "QGNAG", "gap/graph.gd");
