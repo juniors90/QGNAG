@@ -3,7 +3,6 @@
 
 extern "C" {
 #include <gap_all.h>
-#include <precord.h>
 }
 #include <string>
 #include <vector>
