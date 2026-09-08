@@ -118,7 +118,6 @@ KEXT_DEPFILES = $(patsubst %.$(GAP_OBJEXT),%.d,$(KEXT_OBJS))
 # dependency tracking. Supported by GCC 3 and newer; clang; Intel C
 # compiler; and more.
 KEXT_DEPFLAGS = -MQ "$@" -MMD -MP -MF $(@D)/$(*F).d
-CPPFLAGS += -I$(srcdir)/src -I$(srcdir)/src/converters
 
 # build rule for C code
 # The dependency on Makefile ensures that re-running configure recompiles everything

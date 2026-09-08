@@ -17,9 +17,10 @@ KEXT_SOURCES = $(shell find src -type f -name '*.cc')
 
 KEXT_LDFLAGS = -lstdc++
 
-CPPFLAGS += -Isrc
+
 CXXFLAGS += -fopenmp
 LDFLAGS  += -fopenmp
+CPPFLAGS += -Isrc -Isrc/converters
 
 GAPPATH = ../..
 include Makefile.gappkg
