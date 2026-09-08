@@ -112,6 +112,7 @@ clean-tex:
 		-name "*.log" -o \
 		-name "*.out" -o \
 		-name "*.toc" -o \
+		-name "*.tex" -o \
 		-name "*.lof" -o \
 		-name "*.lot" -o \
 		-name "*.fls" -o \
