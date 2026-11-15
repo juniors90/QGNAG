@@ -1,0 +1,14 @@
+# Git history is not needed inside the image
+.git
+
+# Local build artifacts of the QGNAG C++ extension (rebuilt inside the image)
+bin
+gen
+coverage
+coverage.log
+temp_logs
+
+# Optional: the repo has ~260 MB of example notebooks. To keep the image small,
+# uncomment these two lines to ship only the TETRAHEDRON examples.
+# examples/*
+# !examples/TETRAHEDRON
