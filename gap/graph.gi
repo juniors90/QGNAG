@@ -194,18 +194,18 @@ end);
 # 1. Construir nodos/aristas a partir de la data de simples (t_{p,q}(1)<>0)
 ############################################################################
 InstallGlobalFunction( QGNAG_GraphFromSimples, function( data_pols_decomp )
-    local numSimples, 
+    local theta, 
           edges, 
           p, 
           q, 
           polynomial_pq, 
           polynomial_qp;
 
-    numSimples := Length(data_pols_decomp);
+    theta := Length(data_pols_decomp);
     edges := [];
 
-    for p in [1..numSimples] do
-        for q in [p+1..numSimples] do
+    for p in [1..theta] do
+        for q in [p+1..theta] do
             polynomial_pq := data_pols_decomp[p].(String(q));
             polynomial_qp := data_pols_decomp[q].(String(p));
             if Sum(polynomial_pq) <> 0 or Sum(polynomial_qp) <> 0 then
@@ -214,7 +214,7 @@ InstallGlobalFunction( QGNAG_GraphFromSimples, function( data_pols_decomp )
         od;
     od;
 
-    return rec( nodes := [1..numSimples], edges := edges );
+    return rec( nodes := [1..theta], edges := edges );
 end);
 
 ############################################################################

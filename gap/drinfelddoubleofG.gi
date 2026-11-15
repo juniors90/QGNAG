@@ -10,6 +10,7 @@
 # ########################################################################### #
 # Generación automática de las relaciones δ_h g = g δ_{g^{-1} h g}            #
 # ########################################################################### #
+
 InstallGlobalFunction(CommutationRelationsGroupAndDeltas, function(allPairsInG, groupIndex, deltaIndex)
     local g, h, pos_h, pos_g, delta_h, conj, pos_conj, delta_conj, g_word, m1, m2, relsDG;
     

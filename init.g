@@ -38,3 +38,14 @@ ReadPackage( "QGNAG", "gap/braided.gd" );
 ReadPackage( "QGNAG", "gap/block_classification.gd");
 ReadPackage( "QGNAG", "gap/neg_notation.gd" );
 ReadPackage( "QGNAG", "gap/graph.gd");
+ReadPackage( "QGNAG", "gap/KazhdanLusztig.gd" );
+ReadPackage( "QGNAG", "gap/quantummatrix.gd" );
+ReadPackage( "QGNAG", "gap/WriteHilbertSeriesTeX.gd" );
+# init.g
+ReadPackage("QGNAG", "gap/simplessummary.gd");
+ReadPackage("QGNAG", "gap/palyndromic.gd");
+ReadPackage("QGNAG", "gap/checkpaper.gd");;
+ReadPackage("QGNAG", "gap/characters_out.gd");;
+ReadPackage("QGNAG", "gap/dgchecks.gd");;
+# init.g
+ReadPackage( "QGNAG", "gap/klreview.gd" );

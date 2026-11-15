@@ -63,7 +63,7 @@ InstallGlobalFunction( RelationsGivenByNicholsSmashkGDual, function( j, groupEle
     for h in groupElems do 
         pos_h      := Position( QGNAG.Config.elmsG, h ); # Find the Kronecker delta index for \delta_h
         delta_h    := QGNAG.Config.deltaIndex[pos_h];
-        prod       := g_j^(-1) * h;        # Compute the shifted group element g_j^-1 * h
+        prod       := g_j^(-1) * h;                         # Compute the shifted group element g_j^-1 * h
         pos_prod   := Position( QGNAG.Config.elmsG, prod ); # Find the Kronecker delta index for \delta_{g_j^-1 * h}
         delta_prod := QGNAG.Config.deltaIndex[pos_prod];
         m1         := Concatenation( [delta_h], [x_j] );    # Construct the monomials: m1 = \delta_h * x_j    

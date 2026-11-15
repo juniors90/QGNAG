@@ -1,0 +1,90 @@
+\subsection{Hilbert series}\label{sec:hilbert}
+
+We compute the Hilbert series and the dimension of every simple $\D$-module. This is done in \com{socle.gi} as explained above.
+
+Let us first extract the information about $\Lambda_L\cup\Lambda_V$.
+\begin{lemma}
+	The following holds:
+	\begin{align*}
+		\Lambda_L&= \{M(0,\tau_{00}), M(1,\tau_{10})\}, \\
+		\Lambda_V&=\{M(0,\tau_{10}), M(1,\tau_{00}), M(0,\rho_{1}), M(1,\rho_{0}), \\
+		&\qquad M(0,\chi_{(0,0,1)}), M(0,\chi_{(0,1,1)}), M(1,\chi_{(0,0,0)}), M(1,\chi_{(0,1,0)})\}.
+	\end{align*}
+\end{lemma}
+\begin{proof}
+	Computed with \texttt{socle.gi}.
+\end{proof}
+\begin{proposition}\label{pro:verma-simple}
+	The following holds.
+	\begin{enumerate}[leftmargin=*]
+		\item Assume $\lambda\in \Lambda_\tau'$.
+		\begin{itemize}[leftmargin=*]
+			\item[(i)] If $\lambda\in\{M(0,\tau_{12}), M(0,\tau_{11}), M(1,\tau_{01}), M(1,\tau_{02})\}   \subset\Lambda_\tau'$, then
+			\[
+			\H(\lambda)=t^{-3} + 4t^{-2} + 4t^{-1} + 1, \quad \dim \L(\lambda)=10.
+			\]
+			\item[(ii)] If $\lambda\in\{M(0,\tau_{01}), M(0,\tau_{02}), M(1,\tau_{12}), M(1,\tau_{11})\}   \subset\Lambda_\tau'$, then
+			\[
+			\H(\lambda)=t^{-6} + 4t^{-5} + 8t^{-4} + 10t^{-3} + 8t^{-2} + 4t^{-1} + 1, \quad \dim \L(\lambda)=36.
+			\]
+		\end{itemize}
+		\item Assume $\lambda\in \Lambda_\rho'=\{M(0,\rho_{0}), M(1,\rho_{1})\}$. Then
+		\[
+		\H(\lambda)=3t^{-6} + 8t^{-5} + 12t^{-4} + 12t^{-3} + 12t^{-2} + 8t^{-1} + 3, \quad \dim \L(\lambda)=58.
+		\]
+		\item Assume $\lambda\in \Lambda_\chi'$.
+		\begin{itemize}[leftmargin=*]
+			\item[(i)] If $\lambda\in\{M(0,\chi_{(0,0,0)}), M(0,\chi_{(0,1,0)}), M(1,\chi_{(0,0,1)}), M(1,\chi_{(0,1,1)})\}$, then
+			\[
+			\H(\lambda)=3t^{-6} + 8t^{-5} + 12t^{-4} + 12t^{-3} + 12t^{-2} + 8t^{-1} + 3, \quad \dim \L(\lambda)=58.
+			\]
+			\item[(ii)] If $\lambda\in\{M(0,\chi_{(1,0,0)}), M(0,\chi_{(1,1,0)}), M(1,\chi_{(1,0,1)}), M(1,\chi_{(1,1,1)})\}$, then
+			\[
+			\H(\lambda)=3t^{-6} + 12t^{-5} + 24t^{-4} + 30t^{-3} + 24t^{-2} + 12t^{-1} + 3, \quad \dim \L(\lambda)=108.
+			\]
+			\item[(iii)] If $\lambda\in\{M(0,\chi_{(1,0,1)}), M(0,\chi_{(1,1,1)}), M(1,\chi_{(1,0,0)}), M(1,\chi_{(1,1,0)})\}$, then
+			\[
+			\H(\lambda)=3t^{-3} + 8t^{-2} + 8t^{-1} + 3, \quad \dim \L(\lambda)=22.
+			\]
+		\end{itemize}
+		\item Assume $\lambda\in\Lambda_\eta'=\Lambda_\eta$. Then
+		\begin{itemize}[leftmargin=*]
+			\item[(i)] If $\lambda\in \{M(1,\eta^{2}_{0}), M(0,\eta^{2}_{3})\}$, then $\dim \L(\lambda)=172$,
+			\begin{align*}
+				\H(\lambda)&=4t^{-7} + 16t^{-6} + 30t^{-5} + 36t^{-4} + 36t^{-3} + 30t^{-2} + 16t^{-1} + 4.
+			\end{align*}
+			\item[(ii)] If $\lambda\in \{M(1,\eta^{2}_{1}), M(1,\eta^{2}_{5}), M(0,\eta^{2}_{2}), M(0,\eta^{2}_{4})\}$, then $\dim \L(\lambda)=48$,
+			\begin{align*}
+				\H(\lambda)&=4t^{-4} + 12t^{-3} + 16t^{-2} + 12t^{-1} + 4.
+			\end{align*}
+			\item[(iii)] If $\lambda\in \{M(1,\eta^{2}_{2}), M(1,\eta^{2}_{4}), M(0,\eta^{2}_{1}), M(0,\eta^{2}_{5})\}$, then $\dim \L(\lambda)=192$,
+			\begin{align*}
+				\H(\lambda)&=4t^{-7} + 16t^{-6} + 32t^{-5} + 44t^{-4} + 44t^{-3} + 32t^{-2} + 16t^{-1} + 4.
+			\end{align*}
+			\item[(iv)] If $\lambda\in \{M(1,\eta^{2}_{3}), M(0,\eta^{2}_{0})\}$, then $\dim \L(\lambda)=35$,
+			\begin{align*}
+				\H(\lambda)&=4t^{-4} + 8t^{-3} + 11t^{-2} + 8t^{-1} + 4.
+			\end{align*}
+			\item[(v)] If $\lambda\in \{M(0,\eta^{1}_{0}), M(1,\eta^{1}_{3})\}$, then $\dim \L(\lambda)=14$,
+			\begin{align*}
+				\H(\lambda)&=4t^{-2} + 6t^{-1} + 4.
+			\end{align*}
+			\item[(vi)] If $\lambda\in \{M(0,\eta^{1}_{1}), M(0,\eta^{1}_{5}), M(1,\eta^{1}_{2}), M(1,\eta^{1}_{4})\}$, then $\dim \L(\lambda)=96$,
+			\begin{align*}
+				\H(\lambda)&=4t^{-5} + 16t^{-4} + 28t^{-3} + 28t^{-2} + 16t^{-1} + 4.
+			\end{align*}
+			\item[(vii)] If $\lambda\in \{M(0,\eta^{1}_{2}), M(0,\eta^{1}_{4}), M(1,\eta^{1}_{1}), M(1,\eta^{1}_{5})\}$, then $\dim \L(\lambda)=240$,
+			\begin{align*}
+				\H(\lambda)&=4t^{-8} + 16t^{-7} + 32t^{-6} + 44t^{-5} + 48t^{-4} + 44t^{-3} + 32t^{-2} + 16t^{-1} + 4.
+			\end{align*}
+			\item[(viii)] If $\lambda\in \{M(0,\eta^{1}_{3}), M(1,\eta^{1}_{0})\}$, then $\dim \L(\lambda)=52$,
+			\begin{align*}
+				\H(\lambda)&=4t^{-5} + 10t^{-4} + 12t^{-3} + 12t^{-2} + 10t^{-1} + 4.
+			\end{align*}
+		\end{itemize}
+	\end{enumerate}
+	In particular, $\H(\lambda)$ is palindromic for every $\lambda\in \Lambda$.
+\end{proposition}
+\begin{proof}
+	Computed with \texttt{socle.gi}.
+\end{proof}

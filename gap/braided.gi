@@ -16,11 +16,11 @@ InstallGlobalFunction(QGNAG_PermutationFromRecInfo, function( data_rec_info )
         degrees       := List(RecNames(rec_info), Int);
         top_degree    := Maximum(degrees);
         bottom_degree := Minimum(degrees);
-        top_modules := rec_info.(String(top_degree)); # Unique module in the top degree.
+        top_modules   := rec_info.(String(top_degree)); # Unique module in the top degree.
         if Length(top_modules) <> 1 then
             Error("Top degree of data_rec_info[", i, "] does not contain a unique module");
         fi;
-        top_module := top_modules[1][2];
+        top_module     := top_modules[1][2];
         bottom_modules := rec_info.(String(bottom_degree)); # Module in the bottom degree.
         if Length(bottom_modules) <> 1 then
             Error("Bottom degree of data_rec_info[", i, "] does not contain a unique module");

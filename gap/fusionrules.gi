@@ -84,7 +84,7 @@ InstallGlobalFunction( QGNAG_DecomposeDGRepresentation, function(rep, simples)
             #Print("\n.........: ", degree_s);
             continue;
         fi;
-        mats_s := QGNAG_RepresentationMatrices(s);
+        mats_s := QGNAG_RepresentationMatrices(s); # tomo las matrices
         mult_s := QGNAG_DimHomAModules(mats_rep, mats_s);
         #Print("\n----------------: ", degree_s);
         if mult_s > 0 then

@@ -617,7 +617,7 @@ InstallGlobalFunction(QGNAG_CharacterSummaryToLaTeX, function(filename, rec_info
             if mult = 1 then
                 term := StringFormatted("{}[{}]", SimpleNames[idx], d);
             else
-                term := StringFormatted("{}\\,{}[{}]", mult,SimpleNames[idx], d);
+                term := StringFormatted("{}\\,{}[{}]", mult, SimpleNames[idx], d);
             fi;
 
             if first then
@@ -980,3 +980,78 @@ InstallGlobalFunction( QGNAG_ShiftDecompositionKeys, function( data_record_data_
 
     return shiftedData;
 end);
+
+
+QGNAG_LoadHilbertPolynomialsViaCharactersToLaTeX := function(filename, SimplesMn, data_record_data_decomp, SimpleNames)
+    local degreeofreps,
+          tau, 
+          data_rec_info, 
+          data_rec_info_to_zero,
+          data_rec_info_to_zero_negative, 
+          data_rec_info_to_zero_negative_permuted,
+          sNamesL, 
+          out, 
+          theta, 
+          i, 
+          rec_info, 
+          LName, 
+          degrees, 
+          first, 
+          d, 
+          total,
+          pair, 
+          mult, 
+          idx, 
+          term;
+    
+    degreeofreps                            := List(SimplesMn, x -> DegreeOfRepresentation(x.simple));
+    tau                                     := QGNAG_PermutationVarChars(data_record_data_decomp);
+    
+    data_rec_info                           := List(data_record_data_decomp, QGNAG_Decomposition);
+    data_rec_info_to_zero                   := List( data_rec_info, QGNAG_ShiftKeysToZero );
+    data_rec_info_to_zero_negative          := List( data_rec_info_to_zero, QGNAG_InvertKeySigns );
+    data_rec_info_to_zero_negative_permuted := Permuted( data_rec_info_to_zero_negative, tau );
+    
+    sNamesL                                 := List( SimpleNames, QGNAG_ExtractTuple );
+    out                                     := OutputTextFile( filename, false );
+    
+    theta                                   := Length(data_record_data_decomp);
+    for i in [1..theta] do
+        rec_info := data_rec_info_to_zero_negative_permuted[i];
+        LName    := sNamesL[i];
+
+        AppendTo(out, "\\subsubsection{$L", LName, "$}\n");
+        AppendTo(out, "\\[\n");
+        AppendTo(out, "\\operatorname{H}_{", LName, "}(t) = ");
+
+        degrees := List(RecNames(rec_info), Int);
+        Sort(degrees);
+
+        first := true;
+        for d in degrees do
+            total := 0;
+            for pair in rec_info.(String(d)) do
+                mult  := pair[1];
+                idx   := pair[2];
+                total := total + mult * degreeofreps[idx];
+            od;
+
+            if d = 0 then
+                term := StringFormatted("{}", total);
+            elif total = 1 then
+                term := StringFormatted("t^{{{}}}", d);
+            else
+                term := StringFormatted("{}t^{{{}}}", total, d);
+            fi;
+
+            if first then
+                AppendTo(out, term);
+                first := false;
+            else
+                AppendTo(out, " + ", term);
+            fi;
+        od;
+        AppendTo(out, "\n\\]\n\n");
+    od;
+    CloseStream(out);
+end;
