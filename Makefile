@@ -17,9 +17,10 @@ KEXT_SOURCES = $(shell find src -type f -name '*.cc')
 
 KEXT_LDFLAGS = -lstdc++
 
-CPPFLAGS += -Isrc
+
 CXXFLAGS += -fopenmp
 LDFLAGS  += -fopenmp
+CPPFLAGS += -Isrc -Isrc/converters
 
 GAPPATH = ../..
 include Makefile.gappkg
@@ -112,6 +113,7 @@ clean-tex:
 		-name "*.log" -o \
 		-name "*.out" -o \
 		-name "*.toc" -o \
+		-name "*.tex" -o \
 		-name "*.lof" -o \
 		-name "*.lot" -o \
 		-name "*.fls" -o \

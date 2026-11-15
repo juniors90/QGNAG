@@ -30,6 +30,17 @@ ReadPackage( "QGNAG", "gap/visualization.gi" );
 ReadPackage( "QGNAG", "gap/fusionrules.gi" );
 ReadPackage( "QGNAG", "gap/quantumcharacters.gi" );
 ReadPackage( "QGNAG", "gap/braided.gi" );
-ReadPackage( "QGNAG", "gap/block_classification.gi");
+ReadPackage( "QGNAG", "gap/block_classification.gi" );
 ReadPackage( "QGNAG", "gap/neg_notation.gi" );
-ReadPackage( "QGNAG", "gap/graph.gi");
+ReadPackage( "QGNAG", "gap/graph.gi" );
+ReadPackage( "QGNAG", "gap/KazhdanLusztig.gi" );
+ReadPackage( "QGNAG", "gap/quantummatrix.gi" );
+ReadPackage( "QGNAG", "gap/WriteHilbertSeriesTeX.gi" );
+# read.g
+ReadPackage("QGNAG", "gap/simplessummary.gi");
+ReadPackage("QGNAG", "gap/palyndromic.gi");
+ReadPackage("QGNAG", "gap/checkpaper.gi");;
+ReadPackage("QGNAG", "gap/characters_out.gi");;
+ReadPackage("QGNAG", "gap/dgchecks.gi");;
+# read.g
+ReadPackage( "QGNAG", "gap/klreview.gi" );

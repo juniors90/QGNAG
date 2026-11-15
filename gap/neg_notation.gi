@@ -72,49 +72,53 @@ InstallGlobalFunction(QGNAG_BottomWeightPermutation, function(data_record_data_d
 end);
 
 
-InstallGlobalFunction(QGNAG_ShiftKeysToZero, function( data_rec_info )
-    local result, r, names, min_key, new_r, name, new_key;
-    result := [];
-    for r in data_rec_info do
-        names := RecNames(r);
-        # Manejo de seguridad por si hay algún registro vacío
-        if IsEmpty(names) then
-            Add(result, rec());
-            continue;
-        fi;
-        # 1. Capturamos el mínimo de las claves del registro actual
-        min_key := Minimum(List(names, Int));
-        # 2. Creamos un nuevo registro vacío para guardar el desplazamiento
-        new_r := rec();
-        # 3. Restamos el mínimo a cada clave y copiamos el valor
-        for name in names do
-            new_key := String(Int(name) - min_key);
-            new_r.(new_key) := r.(name);
-        od;        
-        Add(result, new_r);
+InstallGlobalFunction(QGNAG_ShiftKeysToZero, function(rec_info)
+    local names, 
+          min_key, 
+          new_r, 
+          name, 
+          new_key;
+
+    names := RecNames(rec_info);
+
+    # Manejo de seguridad por si hay algún registro vacío
+    if IsEmpty(names) then
+        return rec();
+    fi;
+
+    # 1. Capturamos el mínimo de las claves del registro actual
+    min_key := Minimum(List(names, Int));
+
+    # 2. Creamos un nuevo registro vacío para guardar el desplazamiento
+    new_r := rec();
+
+    # 3. Restamos el mínimo a cada clave y copiamos el valor
+    for name in names do
+        new_key := String(Int(name) - min_key);
+        new_r.(new_key) := rec_info.(name);
     od;
-    return result;
+
+    return new_r;
 end);
 
 
-InstallGlobalFunction(QGNAG_InvertKeySigns, function( record_list )
-    local new_list, r, new_r, k, num_k;
-    new_list := [];    
-    for r in record_list do
-        new_r := rec();
-        for k in RecNames(r) do
-            num_k := Int(k); # GAP returns keys as strings (e.g., "1", "2")
-            if num_k <> fail then
-                # Change the sign and use String() so GAP accepts it as a key
-                new_r.(String(-num_k)) := r.(k);
-            else
-                # Fallback in case there is a non-numeric key
-                new_r.(k) := r.(k);
-            fi;
-        od;
-        Add(new_list, new_r);
+InstallGlobalFunction(QGNAG_InvertKeySigns, function( rec_info )
+    local new_k, 
+          new_r, 
+          k, 
+          num_k;
+    
+    new_r    := rec();
+    for k in RecNames(rec_info) do
+        num_k := Int(k); # GAP returns keys as strings (e.g., "1", "2")
+        if num_k <> fail then
+            new_k         := String(-num_k);
+            new_r.(new_k) := rec_info.(k);   # Change the sign and use String() so GAP accepts it as a key
+        else
+            new_r.(k)     := rec_info.(k);   # Fallback in case there is a non-numeric key
+        fi;
     od;
-    return new_list;
+    return new_r;
 end);
 
 #-------------------------------------------------------------------------#

@@ -1,33 +1,21 @@
 InstallGlobalFunction( QGNAG_SaveSimpleModulesNotationToLaTeX, function( filename, SimpleNames )
         local out, n, i, j, k;
-
         n := Length( SimpleNames );
-
         if n mod 4 <> 0 then
             Error( "The number of simple modules must be divisible by 4" );
         fi;
-
         out := OutputTextFile( filename, false );
-
-        AppendTo( out,
-            "## Notation for the Simple $\\mathcal{D}(G)$-Modules\n\n" );
-
-        AppendTo( out, "$$\n" );
-        AppendTo( out,
-            "\\begin{array}{|c|l||c|l||c|l||c|l|}\n" );
+        AppendTo( out, "Notation for the Simple $\\mathcal{D}(G)$-Modules\n\n" );
+        AppendTo( out, "\n" );
+        AppendTo( out, "\\begin{array}{|c|l||c|l||c|l||c|l|}\n" );
         AppendTo( out, "\\hline\n" );
-
         for i in [ 1 .. n / 4 ] do
-
             for j in [ 1 .. 4 ] do
-
                 k := 4 * ( i - 1 ) + j;
-
                 AppendTo(
                     out,
-                    "M_{", String(k), "} & ", SimpleNames[k]
+                    "$M_{", String(k), "}$ & $", SimpleNames[k], "$"
                 );
-
                 if j < 4 then
                     AppendTo( out, " & \n" );
                 else
@@ -36,16 +24,10 @@ InstallGlobalFunction( QGNAG_SaveSimpleModulesNotationToLaTeX, function( filenam
                 fi;
 
             od;
-
         od;
-
-        AppendTo( out,
-            "\\end{array}\n" );
-        AppendTo( out,
-            "$$\n" );
-
+        AppendTo( out, "\\end{array}\n" );
+        AppendTo( out, "\n" );
         CloseStream( out );
-
         return filename;
 end);
 ### ------------------------------------------------------------ ###
@@ -313,9 +295,9 @@ InstallGlobalFunction( QGNAG_PermutationFusionRulesFailures, function( sigma, Si
             #--------------------------------------------------
             # Check dimensions
             #--------------------------------------------------
-            degree_a     := DegreeOfRepresentation(Simples[a].simple);
-            degree_b     := DegreeOfRepresentation(Simples[b].simple);
-            dimension_ab := degree_a * degree_b;
+            degree_a                     := DegreeOfRepresentation(Simples[a].simple);
+            degree_b                     := DegreeOfRepresentation(Simples[b].simple);
+            dimension_ab                 := degree_a * degree_b;
             dimension_from_decomposition := 0;
 
             for c in [1..theta] do
@@ -324,71 +306,21 @@ InstallGlobalFunction( QGNAG_PermutationFusionRulesFailures, function( sigma, Si
             od;
 
             if dimension_ab <> dimension_from_decomposition then
-                Print(
-                    StringFormatted(
-                        "Dimension mismatch: a = {}, b = {}, {} <> {}\n",
-                        a,
-                        b,
-                        dimension_ab,
-                        dimension_from_decomposition
-                    )
-                );
-
-                Add(
-                    failures,
-                    rec(
-                        type := "dimension",
-                        a := a,
-                        b := b,
-                        dimension_tensor := dimension_ab,
-                        dimension_decomposition :=
-                            dimension_from_decomposition
-                    )
-                );
-
+                Print( StringFormatted( "Dimension mismatch: a = {}, b = {}, {} <> {}\n",a,b, dimension_ab, dimension_from_decomposition));
+                Add( failures, rec( type := "dimension", a := a, b := b, dimension_tensor := dimension_ab, dimension_decomposition := dimension_from_decomposition ) );
                 continue;
-
             fi;
-
             #--------------------------------------------------
             # Check permutation of fusion rules
             #--------------------------------------------------
-
             for c in [1..theta] do
-
                 c_sigma := c^(sigma^-1);
-
                 if vector_sigma[c] <> vector_ab[c_sigma] then
-
-                    Print(
-                        StringFormatted(
-                            "Mismatch: a = {}, b = {}, c = {}, {} <> {}\n",
-                            a,
-                            b,
-                            c,
-                            vector_sigma[c],
-                            vector_ab[c_sigma]
-                        )
-                    );
-
-                    Add(
-                        failures,
-                        rec(
-                            type := "multiplicity",
-                            a := a,
-                            b := b,
-                            c := c,
-                            mult_sigma := vector_sigma[c],
-                            mult := vector_ab[c_sigma]
-                        )
-                    );
-
+                    Print( StringFormatted( "Mismatch: a = {}, b = {}, c = {}, {} <> {}\n", a, b, c, vector_sigma[c], vector_ab[c_sigma] ) );
+                    Add( failures, rec( type := "multiplicity", a := a, b := b, c := c, mult_sigma := vector_sigma[c], mult := vector_ab[c_sigma] ) );
                 fi;
-
             od;
-
         od;
-
     od;
     return failures;
 end );
@@ -396,11 +328,8 @@ end );
 InstallGlobalFunction( QGNAG_TestPermutationFusionRules, function( sigma, Simples, data_fusion_rules )
 
     local failures, failure;
-
     failures := QGNAG_PermutationFusionRulesFailures( sigma, Simples, data_fusion_rules );
-
     if IsEmpty(failures) then
-
         Print(
             "\n",
             "========================================\n",
@@ -412,54 +341,23 @@ InstallGlobalFunction( QGNAG_TestPermutationFusionRules, function( sigma, Simple
         return true;
     fi;
 
-    Print(
-        "\n",
-        "========================================\n",
-        "  Permutation fusion test: FAILED\n",
-        "========================================\n",
-        "Number of failures: ",
-        Length(failures),
-        "\n",
-        "\n"
+    Print("\n",
+          "========================================\n",
+          "  Permutation fusion test: FAILED\n",
+          "========================================\n",
+          "Number of failures: ", Length(failures), "\n\n"
     );
     for failure in failures do
-
         if failure.type = "dimension" then
-
-            Print(
-                "Dimension mismatch:\n",
-                "  (a,b) = (",
-                failure.a,
-                ", ",
-                failure.b,
-                ")\n",
-                "  dim(M_a tensor M_b) = ",
-                failure.dimension_tensor,
-                "\n",
-                "  dimension from fusion rule = ",
-                failure.dimension_decomposition,
-                "\n",
-                "\n"
-            );
-
+            Print( "Dimension mismatch:\n",
+                   "  (a,b) = (", failure.a, ", ", failure.b, ")\n",
+                   "  dim(M_a tensor M_b) = ", failure.dimension_tensor, "\n",
+                   "  dimension from fusion rule = ", failure.dimension_decomposition, "\n\n");
         elif failure.type = "multiplicity" then
-            Print(
-                "Multiplicity mismatch:\n",
-                "  (a,b,c) = (",
-                failure.a,
-                ", ",
-                failure.b,
-                ", ",
-                failure.c,
-                ")\n",
-                "  N_c^{a^sigma,b^sigma} = ",
-                failure.mult_sigma,
-                "\n",
-                "  N_{c^sigma^-1}^{a,b} = ",
-                failure.mult,
-                "\n",
-                "\n"
-            );
+            Print("Multiplicity mismatch:\n", 
+                  "  (a,b,c) = (", failure.a, ", ", failure.b, ", ", failure.c, ")\n",
+                  "  N_c^{a^sigma,b^sigma} = ", failure.mult_sigma, "\n",
+                  "  N_{c^sigma^-1}^{a,b} = ", failure.mult, "\n\n");
         fi;
     od;
     return false;
@@ -1229,17 +1127,16 @@ InstallGlobalFunction( QGNAG_ClassifySimplesIntoBlocksContiguous, function( data
     adjacency := List( [1..numSimples], x -> [] );
     for p in [1..numSimples] do
         for q in [1..numSimples] do
-            if p <> q then
+            #if p <> q then
                 polynomial_pq := data_pols_decomp[p].(String(q));
                 polynomial_qp := data_pols_decomp[q].(String(p));
                 if Sum(polynomial_pq) <> 0 or Sum(polynomial_qp) <> 0 then
                     Add( adjacency[p], q );
                 fi;
-            fi;
+            #fi;
         od;
     od;
-    # Componentes conexas via BFS: esto reproduce el "seguir clasificando"
-    # transitivamente del algoritmo del pizarron, no solo los vecinos directos de j.
+    # vecinos directos de j.
     visited    := BlistList( [1..numSimples], [] );
     components := [];
     for p in [1..numSimples] do
@@ -1261,7 +1158,7 @@ InstallGlobalFunction( QGNAG_ClassifySimplesIntoBlocksContiguous, function( data
             Add(components, comp);
         fi;
     od;
-    # Ordenar los bloques por su elemento minimo (orden j_1 < j_2 < ... del pizarron)
+    # Ordenar los bloques por su elemento minimo (orden j_1 < j_2 < ... )
     # e indexar consecutivamente.
     Sort( components, function(a,b) return a[1] < b[1]; end );
     blocks     := rec();
