@@ -28,7 +28,9 @@ end);
 # Key [a, s] of an element h of G.
 InstallGlobalFunction(QGNAG_GroupElementKey, function(gens, h)
     local t, y, z, alpha, beta, s, names;
-    t := gens[1]; y := gens[3]; z := gens[4];
+    t := gens[1];
+    y := gens[3];
+    z := gens[4];
     names := ["0", "1", "w", "w2"];
     for alpha in [0, 1] do
         for beta in [0, 1] do
